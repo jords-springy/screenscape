@@ -1,0 +1,218 @@
+<template>
+  <div class="home">
+    <div data-aos="fade-down" data-aos-duration="500">
+      <div class="section">
+        <img src="https://jords-springy.github.io/hostedimages/images/sslanding.jpg" alt="Landing Page Image" class="landing-image">
+        <div class="spacer"></div>
+        <div class="text">
+          <h1>Welcome to ScreenScape</h1>
+          <p>
+            A platform where users can seamlessly reserve private cinemas and mini-theaters for intimate screenings and special occasions.
+          </p>
+        </div>
+      </div>
+
+      <div class="featured-items">
+        <h2>Featured Items</h2>
+        <p>Explore our top cinema and mini-theater selections.</p>
+        <button class="view-more">View All</button>
+        
+        <div class="cards-container">
+          <div class="card">
+            <img src="https://jords-springy.github.io/hostedimages/images/majesticcine.jpg" alt="Luxury Cinema Room">
+            <div class="card-content">
+              <p>Luxury Cinema Room</p>
+              <p>Capacity: 10 guests</p>
+              <button class="view-more">View More</button>
+            </div>
+          </div>
+          <div class="card">
+            <img src="https://jords-springy.github.io/hostedimages/images/cinelux.jpg" alt="Premium Mini-Theater">
+            <div class="card-content">
+              <p>Premium Mini-Theater</p>
+              <p>Capacity: 6 guests</p>
+              <button class="view-more">View More</button>
+            </div>
+          </div>
+          <div class="card">
+            <img src="https://jords-springy.github.io/hostedimages/images/elitescreen.jpg" alt="Exclusive Cinema Experience">
+            <div class="card-content">
+              <p>Exclusive Cinema Experience</p>
+              <p>Capacity: 15 guests</p>
+              <button class="view-more">View More</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="signup-section">
+        <div class="signup-content">
+          <h2>Join ScreenScape Today!</h2>
+          <p>Sign up now to reserve your luxury private cinema experience.</p>
+          <router-link to="/signup">
+            <button class="signup-button">Sign Up</button>
+          </router-link>
+        </div>
+      </div>
+   
+      <div data-aos="fade-right">
+    <div class="reviews">
+      <h2>Customer Reviews</h2>
+      <div class="review-cards">
+        <div class="review-card">
+          <p class="intro-text">"Screenscape took date night to the next level! My partner and I had the entire cinema to ourselves, which made the experience so much more personal and romantic. I highly recommend it for anyone looking for a unique and cozy cinema experience!"</p>
+          <span>- Mia</span>
+        </div>
+        <div class="review-card">
+          <p class="intro-text">"Screenscape is a hidden gem! I booked a private screening for my wife’s birthday, and it was an unforgettable experience. The setup was perfect, and the staff was so accommodating. Definitely planning our next movie night here!"</p>
+          <span>- Liam</span>
+        </div>
+        <div class="review-card">
+          <p class="intro-text">"Screenscape was a fantastic experience from start to finish. We had a private screening for a birthday celebration, and everyone was blown away by how luxurious and exclusive it felt. Highly recommend for any special occasion!"</p>
+          <span>- Faith</span>
+        </div>
+      </div>
+    </div>
+</div>
+    
+
+      <div class="social-media">
+  <h2>Follow Us</h2>
+  <a href="https://facebook.com/mi-casa" target="_blank" class="social-icon">
+    <i class="fab fa-facebook-f"></i>
+  </a>
+  <a href="https://instagram.com/mi-casa" target="_blank" class="social-icon">
+    <i class="fab fa-instagram"></i>
+  </a>
+  <a href="https://twitter.com/mi-casa" target="_blank" class="social-icon">
+    <i class="fab fa-twitter"></i>
+  </a>
+</div>
+         
+        
+        </div>
+      </div>
+
+</template>
+
+<script>
+export default {
+  name: 'HomeView',
+  components: {}
+}
+</script>
+
+<style scoped>
+/* Landing Section Styles */
+.section {
+  text-align: center;
+  padding: 20px;
+}
+
+.landing-image {
+  max-width: 100%;
+  height: auto;
+}
+
+.text h1 {
+  margin-top: 20px;
+}
+
+.spacer {
+  margin-bottom: 20px;
+}
+
+/* Featured Items Section */
+.featured-items {
+  text-align: center;
+  margin-top: 50px;
+  padding-bottom: 100px;
+}
+
+
+.view-more{
+  background-color: black;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 40px;
+  align-content: center;
+}
+
+.view-more:hover {
+  background-color: #333;
+}
+/* Cards Container */
+.cards-container {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+  padding: 0 20px;
+}
+
+/* Updated Card Styles */
+.card {
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  text-align: center; /* Center the text horizontally */
+  display: flex; /* Use flexbox for vertical centering */
+  flex-direction: column; /* Ensure content is stacked vertically */
+  justify-content: center; /* Center content vertically */
+}
+
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; /* Center the content horizontally */
+}
+
+
+.card h3 {
+  margin-bottom: 10px;
+}
+
+.card p {
+  font-weight: bold;
+  color: #333;
+}
+
+/* New Signup Section Styles */
+.signup-section {
+  background-color: black;
+  color: white;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.signup-content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.signup-button {
+  background-color: white;
+  color: black;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.signup-button:hover {
+  background-color: #950101;
+}
+</style>

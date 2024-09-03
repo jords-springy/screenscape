@@ -67,10 +67,14 @@ const getUserDb = async (userID) => {
     }
   }
   
+  const findUserByEmail = async (email) => {
+    let [[user]] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+    return user;
+};
 // console.log(await insertUser('Matthew','23','purple','gatsby'))
 console.log(await getUsersDb());
 // console.log(await getUser(1));
-export {getUsersDb, getUserDb, insertUserDb, deleteUserDb, updateUserDB}
+export {getUsersDb, getUserDb, insertUserDb, deleteUserDb, updateUserDB,findUserByEmail}
 
 
 

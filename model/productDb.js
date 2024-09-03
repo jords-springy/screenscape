@@ -18,7 +18,7 @@ const deleteProductDb = async(prodID) =>{
     await pool.query('DELETE FROM bfgktuen9wud2azxdgho.products WHERE prodID = ?', [prodID])
 }
 const updateProductDB = async (prodID,prodName,prodDescription,prodFeatures,quantity,prodSound,prodPackage,amount,category,prodUrl)=>{
-    await pool.query('UPDATE bfgktuen9wud2azxdgho.products SET prodName = ?,prodDescription = ?, prodFeatures = ?,quantity = ?,prodSound = ?,prodPackage = ?,amount = ?,category = ?,prodUrl = ? ,  WHERE prodID = ?',[prodName,prodDescription,prodFeatures,quantity,prodSound,prodPackage,amount,category,prodUrl,prodID]
+    await pool.query('UPDATE bfgktuen9wud2azxdgho.products SET prodName = ?,prodDescription = ?, prodFeatures = ?,quantity = ?,prodSound = ?,prodPackage = ?,amount = ?,category = ?,prodUrl = ?  WHERE prodID = ?',[prodName,prodDescription,prodFeatures,quantity,prodSound,prodPackage,amount,category,prodUrl,prodID]
     )
 }
 
@@ -28,7 +28,5 @@ const addToCartDB = async (prodID,userID)=>{
         VALUES (?,?)`)
         ,[prodID,userID]
 }
-// console.log(await insertFruit('Matthew','23','purple','gatsby'))
-// console.log(await getFruitsDb());
-// console.log(await getFruit(1));
+
 export {getProductsDb, getProductDb, insertProductDb, deleteProductDb, updateProductDB,addToCartDB}

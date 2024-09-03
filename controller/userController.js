@@ -1,5 +1,7 @@
 import {getUsersDb, getUserDb, insertUserDb, deleteUserDb, updateUserDB} from '../model/userDB.js'
 import {hash} from 'bcrypt'
+
+
 const getUsers = async (req, res, next) => {
     try {
       const users = await getUsersDb();
@@ -53,7 +55,7 @@ const getUser = async (req, res, next) => {
   
   const updateUser = async (req, res, next) => {
     try {
-      let { userID, firstName, lastName, userAge, gender, userRole, emailAdd, userPass, userProfile } = req.body;
+      let {  firstName, lastName, userAge, gender, userRole, emailAdd, userPass, userProfile } = req.body;
   
       const user = await getUserDb(req.params.userID);
       if (!user) {
@@ -61,6 +63,7 @@ const getUser = async (req, res, next) => {
       }
   
       // Update fields only if new values are provided, otherwise keep existing values
+     
       firstName = firstName || user.firstName;
       lastName = lastName || user.lastName;
       userAge = userAge || user.userAge;
@@ -77,54 +80,56 @@ const getUser = async (req, res, next) => {
       next(new Error('Failed to update user'));
     }
   }
-  const loginUser = async (req, res, next) => {
+  const loginUser = async (req, res) => {
+    const { email, password } = req.body;
+
     try {
-      const { emailAdd, userPass } = req.body;
-  
-      // Fetch user from the database
-      const user = await getUserByEmail(emailAdd);
-  
-      if (!user) {
-        return res.status(401).json({ message: 'Invalid email or password' });
-      }
-  
-      // Compare provided password with hashed password
-      const isMatch = await compare(userPass, user.userPass);
-  
-      if (!isMatch) {
-        return res.status(401).json({ message: 'Invalid email or password' });
-      }
-  
-      // Generate token
-      const token = jwt.sign({ userID: user.userID }, process.env.SECRET_KEY, { expiresIn: '1h' });
-  
-      // Respond with token
-      res.json({ message: 'You have signed in!', token });
+        // Find the user by email
+        const user = await findUserByEmail(email);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Compare the provided password with the hashed password
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+
+        // Generate a JWT token
+        const token = jwt.sign({ email: user.email, userRole: user.userRole }, process.env.SECRET_KEY, { expiresIn: '1h' });
+
+        res.status(200).json({ message: 'Login successful', token });
     } catch (error) {
-      console.error('Error during login:', error.message);
-      next(new Error('Failed to login'));
+        res.status(500).json({ message: 'Error logging in', error });
     }
-  }
+};
   
-  const registerUser = async (req, res, next) => {
+  const registerUser = async (req, res) => {
+    const { emailAdd, userPass, userRole } = req.body;
+
     try {
-      const { firstName, lastName, userAge, gender, userRole, emailAdd, userPass, userProfile } = req.body;
-  
-      // Encrypt password
-      const hashedPassword = await hash(userPass, 10);
-  
-      // Insert user into database
-      await insertUserDb(firstName, lastName, userAge, gender, userRole, emailAdd, hashedPassword, userProfile);
-  
-      // Generate JWT token
-      const token = jwt.sign({ emailAdd, role: userRole }, process.env.SECRET_KEY, { expiresIn: '1h' });
-  
-      // Respond with token
-      res.status(201).json({ message: 'User registered successfully', token });
+        // Encrypt the password
+        const hashedPassword = await bcrypt.hash(userPass, 10);
+
+        // Check if userRole is admin
+        if (userRole === 'admin') {
+            // Only admin role can be added to the database
+            await addUser(emailAdd, hashedPassword, userRole);
+        } else {
+            // Regular user registration (not adding to the admin role in the database)
+            await addUser(emailAdd, hashedPassword, 'user');
+        }
+
+        // Generate a JWT token
+        const token = jwt.sign({ emailAdd, userRole: userRole || 'user' }, process.env.SECRET_KEY, { expiresIn: '1h' });
+
+        res.status(201).json({ message: 'User registered successfully', token });
     } catch (error) {
-      console.error('Error during registration:', error.message);
-      next(new Error('Failed to register user'));
+        res.status(500).json({ message: 'Error registering user', error });
     }
-  };
+};
   
 export {getUsers, getUser, insertUser, deleteUser, updateUser,loginUser,registerUser}

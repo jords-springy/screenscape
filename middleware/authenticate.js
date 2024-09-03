@@ -5,73 +5,74 @@ import {config} from 'dotenv'
 config()
 
 
-const checkUser = async (req, res, next) => {
-    try {
-      const { emailAdd, userPass } = req.body;
-  
-      // Fetch user from the database
-      const user = await getUserByEmail(emailAdd);
-  
-      if (!user) {
-        return res.status(401).json({ message: 'Invalid email or password' });
-      }
-  
-      // Compare provided password with hashed password
-      const isMatch = await compare(userPass, user.userPass);
-  
-      if (!isMatch) {
-        return res.status(401).json({ message: 'Invalid email or password' });
-      }
-  
-      // Generate token
-      const token = jwt.sign({ userID: user.userID, emailAdd: emailAdd }, process.env.SECRET_KEY, { expiresIn: '1h' });
-  
-      // Attach token to the request body (or directly in the response)
-      req.token = token;
-  
-      // Call next middleware or route handler
-      next();
-    } catch (error) {
-      console.error('Error during authentication:', error.message);
-      next(new Error('Failed to authenticate user'));
-    }
+const authMiddleware = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+
+  if (!token) {
+      return res.status(401).json({ message: 'Unauthorized: No token provided' });
   }
 
-const verifyAToken = (req,res,next)=>{
-    let {cookie} = req.headers
-    // checks if token exists first
+  try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET); // Validate token
+      req.user = decoded; // Attach decoded user data (e.g., id, role) to request object
+      next(); // Proceed to the next middleware or route handler
+  } catch (error) {
+      return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+  }
+};
 
+const verifyAToken = (roles = []) => {
+  return async (req, res, next) => {
+      try {
+          // Get token from Authorization header
+          const authHeader = req.headers.authorization;
+          if (!authHeader) {
+              return res.status(401).json({ message: 'No token provided' });
+          }
 
-    let token = cookie && cookie.split('=')[1]
-    // console.log(token);
-    jwt.verify(token,process.env.SECRET_KEY,(err,decoded) =>{
-        if(err){
-            res.json({message:'Token has expired'})
-            return
-        }
-        req.body.user = decoded.emailAdd
-        console.log(decoded);
-        
-    })
-     next()
-}
+          // Extract token from the header
+          const token = authHeader.split(' ')[1]; // 'Bearer <token>'
+          if (!token) {
+              return res.status(401).json({ message: 'No token provided' });
+          }
 
-const checkAdmin = async (req, res, next) => {
-    try {
-      const { userID } = req.body; // Assume admin's userID is sent in the body or fetched from a token
-      
-      // Fetch user from the database (assuming you have a function to get user by ID)
-      const user = await getUserById(userID); // Adjust function as needed
-      
-      if (user && user.userRole === 'admin') {
-        next(); // User is admin, proceed to the registration route
-      } else {
-        res.status(403).json({ message: 'Only admins can add new users' });
+          // Verify token
+          const decoded = await jwt.verify(token, process.env.SECRET_KEY);
+
+          // Attach decoded token to request object
+          req.user = decoded;
+
+          // Check if user role is authorized
+          if (roles.length && !roles.includes(decoded.userRole)) {
+              return res.status(403).json({ message: 'Access denied' });
+          }
+
+          // Proceed to next middleware or route handler
+          next();
+      } catch (err) {
+          // Handle verification errors
+          res.status(403).json({ message: 'Token is invalid or has expired' });
       }
-    } catch (error) {
-      console.error('Error checking admin status:', error.message);
-      res.status(500).json({ message: 'Internal server error' });
-    }
+  };
+};
+const generateToken = (user) => {
+  const payload = {
+      emailAdd: user.email,
+      userRole: user.userRole // Add userRole to the payload
+  };
+
+  const token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: '1h' });
+  return token;
+};
+
+const adminMiddleware = (req, res, next) => {
+  const { role } = req.user;
+
+  if (role !== 'admin') {
+      return res.status(403).json({ message: 'Forbidden: Admin access only' });
   }
 
-export {checkUser,verifyAToken,checkAdmin}
+  next(); // Proceed to the next middleware or route handler
+};
+
+export {authMiddleware,verifyAToken,adminMiddleware,generateToken}

@@ -67,10 +67,17 @@ const getUserDb = async (userID) => {
     }
   }
   
-  const findUserByEmail = async (email) => {
-    let [[user]] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
-    return user;
+  const findUserByEmail = async (emailAdd) => {
+    try {
+        const query = 'SELECT * FROM users WHERE emailAdd = ?';
+        const [rows] = await pool.query(query, [emailAdd]); // Use pool to execute the query
+        return rows[0]; // Return the first row (user) if found
+    } catch (error) {
+        throw new Error('Error fetching user by email');
+    }
 };
+
+
 // console.log(await insertUser('Matthew','23','purple','gatsby'))
 console.log(await getUsersDb());
 // console.log(await getUser(1));

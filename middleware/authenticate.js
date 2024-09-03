@@ -6,20 +6,30 @@ config()
 
 
 const authMiddleware = (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1];
-
-  if (!token) {
+    // Get the token from the Authorization header
+    const token = req.headers['authorization'];
+    
+    // Check if the token is provided and follows the Bearer format
+    if (!token || !token.startsWith('Bearer ')) {
       return res.status(401).json({ message: 'Unauthorized: No token provided' });
-  }
-
-  try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET); // Validate token
-      req.user = decoded; // Attach decoded user data (e.g., id, role) to request object
-      next(); // Proceed to the next middleware or route handler
-  } catch (error) {
-      return res.status(401).json({ message: 'Unauthorized: Invalid token' });
-  }
-};
+    }
+  
+    // Extract the actual token from the Bearer scheme
+    const actualToken = token.split(' ')[1];
+  
+    try {
+      // Verify the token
+      const decoded = jwt.verify(actualToken, process.env.SECRET_KEY);
+  
+      // Store the user data in the request object
+      req.user = decoded;
+  
+      // Continue to the next middleware/route handler
+      next();
+    } catch (error) {
+      return res.status(401).json({ message: 'Unauthorized: Invalid token', error: error.message });
+    }
+  };
 
 const verifyAToken = (roles = []) => {
   return async (req, res, next) => {

@@ -1,55 +1,88 @@
 import { getAllOrders, getOrderById, createOrder, updateOrder, deleteAllOrders, deleteOrderById } from '../model/orderDb.js';
 
 const getOrders = async (req, res) => {
+  try {
     if (req.user.userRole === 'admin') {
-        return res.json(await getAllOrders(req.params.userID));
+      const orders = await getAllOrders(req.params.userID);
+      res.status(200).json(orders); 
     } else {
-        res.status(403).json({ message: 'Forbidden: You do not have permission to view these orders' });
+      res.status(403).json({ message: 'Forbidden: You do not have permission to view these orders' }); 
     }
-};
+  } catch (error) {
+    console.error('Error fetching orders:', error.message);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message }); 
+  }
+}
 
 const getOrder = async (req, res) => {
+  try {
     if (req.user.userRole === 'admin') {
-        return res.json(await getOrderById(req.params.userID, req.params.orderID));
+      const order = await getOrderById(req.params.userID, req.params.orderID);
+      if (order) {
+        res.status(200).json(order); 
+      } else {
+        res.status(404).json({ message: 'Order not found' }); 
+      }
     } else {
-        res.status(403).json({ message: 'Forbidden: You do not have permission to view this order' });
+      res.status(403).json({ message: 'Forbidden: You do not have permission to view this order' }); 
     }
-};
+  } catch (error) {
+    console.error('Error fetching order:', error.message);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message }); 
+  }
+}
 
 const insertOrder = async (req, res) => {
-    try {
-        const { prodID } = req.body;
-        
-        // Ensure the user has permission to place the order
-        if (req.user.userRole !== 'admin' && req.user.userID !== req.params.userID) {
-            return res.status(403).json({ message: 'Forbidden: You do not have permission to place an order for this user' });
-        }
-
-        // Insert the order
-        await createOrder(req.params.userID, prodID);
-
-        res.status(201).json({ message: 'Order was inserted successfully' });
-    } catch (error) {
-        console.error('Error inserting order:', error);
-        res.status(500).json({ message: 'Internal Server Error' });
-    }
-};
-const updateOrderDetails = async (req, res) => {
+  try {
     const { prodID } = req.body;
-    const existingOrder = await getOrderById(req.params.userID, req.params.orderID);
-    const updatedProdID = prodID || existingOrder.prodID;
-    await updateOrder(req.params.userID, req.params.orderID, updatedProdID);
-    res.send('Order update was successful');
-};
+    if (req.user.userRole !== 'admin' && req.user.userID !== req.params.userID) {
+      return res.status(403).json({ message: 'Forbidden: You do not have permission to place an order for this user' }); 
+    }
+    await createOrder(req.params.userID, prodID);
+    res.status(201).json({ message: 'Order was inserted successfully' }); 
+  } catch (error) {
+    console.error('Error inserting order:', error.message);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message }); 
+  }
+}
 
- const deleteAllUserOrders = async (req, res) => {
+const updateOrderDetails = async (req, res) => {
+    try {
+      if (req.user.userRole !== 'admin') {
+        return res.status(403).json({ message: 'Forbidden: Only admins can update orders' });
+      }
+      const existingOrder = await getOrderById(req.params.userID, req.params.orderID);
+      if (!existingOrder) {
+        return res.status(404).json({ message: 'Order not found' });
+      }
+      const { prodID } = req.body;
+      const updatedProdID = prodID || existingOrder.prodID;
+      await updateOrder(req.params.userID, req.params.orderID, updatedProdID);
+      res.status(200).json({ message: 'Order update was successful' });
+    } catch (error) {
+      console.error('Error updating order:', error.message);
+      res.status(500).json({ message: 'Internal Server Error', error: error.message });
+    }
+  };
+
+const deleteAllUserOrders = async (req, res) => {
+  try {
     await deleteAllOrders(req.params.userID);
-    res.send('All orders have been deleted');
-};
+    res.status(200).json({ message: 'All orders have been deleted' }); 
+  } catch (error) {
+    console.error('Error deleting all user orders:', error.message);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+  }
+}
 
 const deleteOrder = async (req, res) => {
+  try {
     await deleteOrderById(req.params.userID, req.params.orderID);
-    res.send('Order has been deleted');
-};
+    res.status(200).json({ message: 'Order has been deleted' });
+  } catch (error) {
+    console.error('Error deleting order:', error.message);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message }); 
+  }
+}
 
-export {getOrders,getOrder,insertOrder,updateOrderDetails,deleteAllUserOrders,deleteOrder}
+export { getOrders, getOrder, insertOrder, updateOrderDetails, deleteAllUserOrders, deleteOrder }

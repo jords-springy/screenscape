@@ -69,13 +69,21 @@ const getUserDb = async (userID) => {
   
   const findUserByEmail = async (emailAdd) => {
     try {
-        const query = 'SELECT * FROM users WHERE emailAdd = ?';
-        const [rows] = await pool.query(query, [emailAdd]); // Use pool to execute the query
-        return rows[0]; // Return the first row (user) if found
+      const query = 'SELECT * FROM users WHERE emailAdd = ?';
+      const [rows] = await pool.query(query, [emailAdd]);
+      
+      if (rows.length === 0) {
+        console.log('No user found with email:', emailAdd);
+        return null; // No user found
+      }
+      
+      return rows[0]; // Return the first row (user) if found
     } catch (error) {
-        throw new Error('Error fetching user by email');
+      console.error('Error fetching user by email:', error.message);
+      throw new Error('Error fetching user by email');
     }
-};
+  };
+  
 
 
 // console.log(await insertUser('Matthew','23','purple','gatsby'))

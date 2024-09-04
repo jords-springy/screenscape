@@ -22,11 +22,11 @@ const updateProductDB = async (prodID,prodName,prodDescription,prodFeatures,quan
     )
 }
 
-const addToCartDB = async (prodID,userID)=>{
-    await pool(`INSERT INTO bfgktuen9wud2azxdgho.products
+const addToOrderDB = async (prodID,userID)=>{
+    await pool(`INSERT INTO bfgktuen9wud2azxdgho.orders
         (prodID,userID)
         VALUES (?,?)`)
         ,[prodID,userID]
 }
 
-export {getProductsDb, getProductDb, insertProductDb, deleteProductDb, updateProductDB,addToCartDB}
+export {getProductsDb, getProductDb, insertProductDb, deleteProductDb, updateProductDB,addToOrderDB}

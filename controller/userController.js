@@ -73,50 +73,43 @@ const updateUser = async (req, res, next) => {
   }
 }
 const loginUser = async (req, res) => {
-    const { emailAdd, password } = req.body;
-  
-    try {
-      // Normalize email to lowercase to avoid case sensitivity issues
-      const normalizedEmail = emailAdd.toLowerCase();
-  
-      // Log the received email and password for debugging
-      console.log('Login Request:', normalizedEmail, password);
-  
-      // Find user by email
-      const user = await findUserByEmail(normalizedEmail);
-      
-      // Log the result from the database
-      console.log('User from DB:', user);
-  
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-      }
-  
-      // Check if both password and hashed password exist
-      if (!password || !user.userPass) {
-        return res.status(400).json({ message: 'Password or hashed password missing' });
-      }
-  
-      // Compare the provided password with the stored hashed password
-      const isMatch = await bcrypt.compare(password, user.userPass);
-  
-      if (!isMatch) {
-        return res.status(401).json({ message: 'Invalid credentials' });
-      }
-  
-      // Generate JWT token
-      const token = jwt.sign(
-        { emailAdd: user.emailAdd, userRole: user.userRole },
-        process.env.SECRET_KEY,
-        { expiresIn: '1h' }
-      );
-  
-      res.status(200).json({ message: 'Login successful', token });
-    } catch (error) {
-      console.error('Login Error:', error); // Log the error for debugging purposes
-      res.status(500).json({ message: 'Error logging in', error: error.message });
+  const { emailAdd, password } = req.body;
+
+  try {
+    const normalizedEmail = emailAdd.toLowerCase();
+    const user = await findUserByEmail(normalizedEmail);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
     }
-  };
+
+    const isMatch = await bcrypt.compare(password, user.userPass);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    // Generate the JWT token
+    const token = jwt.sign(
+      { emailAdd: user.emailAdd, userRole: user.userRole },
+      process.env.SECRET_KEY,
+      { expiresIn: '1h' }
+    );
+
+    // Set the token in a cookie (HttpOnly, Secure, etc.)
+    res.cookie('jwt', token, {
+      httpOnly: true, // Prevents access from JavaScript
+      secure: process.env.NODE_ENV === 'production', // Only over HTTPS in production
+      sameSite: 'Strict', // Prevents CSRF
+      maxAge: 60 * 60 * 1000 // 1 hour
+    });
+
+    res.status(200).json({ message: 'Login successful' });
+  } catch (error) {
+    console.error('Login Error:', error);
+    res.status(500).json({ message: 'Error logging in', error: error.message });
+  }
+};
+
   
   
   

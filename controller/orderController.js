@@ -17,11 +17,23 @@ const getOrder = async (req, res) => {
 };
 
 const insertOrder = async (req, res) => {
-    const { prodID } = req.body;
-    await createOrder(req.params.userID, prodID);
-    res.send('Order was inserted successfully');
-};
+    try {
+        const { prodID } = req.body;
+        
+        // Ensure the user has permission to place the order
+        if (req.user.userRole !== 'admin' && req.user.userID !== req.params.userID) {
+            return res.status(403).json({ message: 'Forbidden: You do not have permission to place an order for this user' });
+        }
 
+        // Insert the order
+        await createOrder(req.params.userID, prodID);
+
+        res.status(201).json({ message: 'Order was inserted successfully' });
+    } catch (error) {
+        console.error('Error inserting order:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
 const updateOrderDetails = async (req, res) => {
     const { prodID } = req.body;
     const existingOrder = await getOrderById(req.params.userID, req.params.orderID);

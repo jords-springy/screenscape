@@ -8,11 +8,11 @@ router.use(authMiddleware);
 router.post('/cart',verifyAToken,addToCart)
 router.
     route('/')
-        .get(getProducts)
+        .get(adminMiddleware,getProducts)
         .post(adminMiddleware,insertProduct)
 router.
     route('/:prodID')
         .get(getProduct)
-        .delete(adminMiddleware,deleteProduct)
-        .patch(adminMiddleware,updateProduct)
+        .delete(deleteProduct)
+        .put(updateProduct)
 export default router

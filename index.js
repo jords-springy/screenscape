@@ -3,13 +3,16 @@ import cors from 'cors';
 import { config } from 'dotenv';
 import userRouter from './routes/userRouter.js';
 import productRouter from './routes/productRouter.js';
-import orderRouter from './routes/orderRouter.js'; // Import the order router
+import orderRouter from './routes/orderRouter.js';
+import cookieParser from 'cookie-parser';
+// Import the order router
 
 config();
 const app = express();
 const port = process.env.PORT || 4000;
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(cors({
     origin: 'http://localhost:8080',
     credentials: true

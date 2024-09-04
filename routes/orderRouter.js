@@ -7,15 +7,15 @@ const router = express.Router();
 
 router.use(authMiddleware);
 
-router.get('/user/:userID/order', getOrders);
+router.get('/:userID/order', getOrders);
 
-router.get('/user/:userID/order/:orderID', getOrder);
+router.get('/:userID/order/:orderID', getOrder);
 
-router.post('/user/:userID/order', adminMiddleware, insertOrder);
+router.post('/:userID/order', adminMiddleware, insertOrder);
 
-router.patch('/user/:userID/order/:orderID', adminMiddleware, updateOrderDetails);
+router.patch('/:userID/order/:orderID', adminMiddleware, updateOrderDetails);
 
-router.delete('/user/:userID/order', adminMiddleware, deleteAllUserOrders);
+router.delete('/:userID/order',  deleteAllUserOrders);
 
-router.delete('/user/:userID/order/:orderID', adminMiddleware, deleteOrder);
+router.delete('/:userID/order/:orderID',  deleteOrder);
 export default router;

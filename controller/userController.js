@@ -1,4 +1,4 @@
-import {getUsersDb, getUserDb, insertUserDb, deleteUserDb, updateUserDB,findUserByEmail} from '../model/userDB.js'
+import {getUsersDb, getUserDb, insertUserDb, deleteUserDb, updateUserDB,findUserByEmail} from '../model/userDb.js'
 import {hash} from 'bcrypt'
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';

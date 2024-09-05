@@ -1,5 +1,5 @@
 import { getProductsDb, getProductDb, insertProductDb, deleteProductDb, updateProductDB, addToOrderDB } from '../model/productDb.js';
-import { getUserDb } from '../model/userDB.js';
+import { getUserDb } from '../model/userDb.js';
 
 const getProducts = async (req, res) => {
     try {

@@ -1,16 +1,12 @@
 <template>
   <div class="home">
-    <div data-aos="fade-down" data-aos-duration="500">
-      <div class="section">
-        <img src="https://jords-springy.github.io/hostedimages/images/sslanding.jpg" alt="Landing Page Image" class="landing-image">
-        <div class="spacer"></div>
-        <div class="text">
-          <h1>Welcome to ScreenScape</h1>
-          <p>
-            A platform where users can seamlessly reserve private cinemas and mini-theaters for intimate screenings and special occasions.
-          </p>
-        </div>
+    <div class="parallax">
+      <div class="parallax-blur"></div>
+      <div class="hero-content">
+        <h1>Welcome to ScreenScape</h1>
+        <p>A platform where users can seamlessly reserve private cinemas and mini-theaters for intimate screenings and special occasions.</p>
       </div>
+    </div>
 
       <div class="featured-items">
         <h2>Featured Items</h2>
@@ -91,7 +87,6 @@
          
         
         </div>
-      </div>
 
 </template>
 
@@ -109,18 +104,42 @@ export default {
   padding: 20px;
 }
 
-.landing-image {
-  max-width: 100%;
-  height: auto;
+.parallax {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  overflow: hidden;
+}
+.parallax-blur {
+  background-image: url('https://jords-springy.github.io/hostedimages/images/sslanding.jpg');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  filter: blur(8px); /* Blur effect */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Ensure the image stays behind the text */
+}
+.hero-content {
+  position: relative;
+  z-index: 1; /* Ensure the text stays above the blurred image */
+  color: #5C5347;
+}
+.hero-content h1 {
+  color: #fff;
+}
+.hero-content p {
+  color: #fff;
 }
 
-.text h1 {
-  margin-top: 20px;
-}
 
-.spacer {
-  margin-bottom: 20px;
-}
 
 /* Featured Items Section */
 .featured-items {

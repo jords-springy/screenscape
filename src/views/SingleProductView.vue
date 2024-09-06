@@ -1,70 +1,59 @@
 <template>
-    <div class="product">
-        <SingleCard
-    v-for="prod in product"
-    :key="prod.id"
-    :product="prod"
-    @toggle-details="toggleProductDetails"
-  >
-    <template v-if="product.showDetails">
-      <!-- render product details here -->
-    </template>
-  
-</SingleCard>
-    </div>
+  <div class="product">
+    <SingleCard v-if="product" :product="product">
+      <template #image>
+        <img :src="product.prodUrl || 'https://example.com/default-image.jpg'" alt="Product Image" />
+      </template>
+
+      <template #title>
+        <h3>{{ product.prodName || 'No Name' }}</h3>
+      </template>
+
+      <template #description>
+        <p><strong>Description:</strong> {{ product.prodDescription || 'No Description' }}</p>
+        <p><strong>Features:</strong> {{ product.prodFeatures || 'No Features' }}</p>
+        <p><strong>Sound:</strong> {{ product.prodSound || 'No Sound' }}</p>
+        <p><strong>Package:</strong> {{ product.prodPackage || 'No Package' }}</p>
+        <p><strong>Category:</strong> {{ product.category || 'No Category' }}</p>
+        <p><strong>Quantity:</strong> {{ product.quantity || 0 }}</p>
+        <p><strong>Price:</strong> R{{ product.amount || '0.00' }}</p>
+      </template>
+
+      <template #button>
+        <button @click="toggleProductDetails">
+          {{ product.showDetails ? 'Show Less' : 'View More' }}
+        </button>
+      </template>
+    </SingleCard>
+  </div>
 </template>
-  <script>
-  import CardComp from "../components/CardComp.vue";
 
-  import SingleCard from "@/components/SingleCard.vue";
-  import axios from "axios";
-  
-  
-  export default {
-    name: "SingleProductView",
-    components: {
-      CardComp,
-      SingleCard
-    },
-    data() {
-      return {
-        product: [],
-        categories: [],
-        priceFilters: [
-          { label: "Under R50", min: 0, max: 50 },
-          { label: "R50 - R100", min: 50, max: 100 },
-          { label: "R100 - R200", min: 100, max: 200 },
-          { label: "Over R200", min: 200, max: Infinity },
-        ],
-        selectedCategory: null,
-        selectedPriceRange: null,
-        searchQuery: "",
-        sortOrder: "asc",
-      };
-    },
-    computed: {
-      
+<script>
+import SingleCard from "@/components/SingleCard.vue";
+import { mapGetters } from "vuex";
 
-    },
-    methods: {
-      async fetchProduct() {
-        try {
-            const prodID = this.$route.params.prodID;
-            const response = await axios.get(`https://screenscape.onrender.com/product/${prodID}`);
-            console.log(`https://screenscape.onrender.com/product/${prodID}`);
-            this.product = response.data.result;
-            console.log('Categories:', this.categories);// Debugging
-        } catch (error) {
-          console.error(error);
-        }
+export default {
+  name: "SingleProductView",
+  components: {
+    SingleCard,
+  },
+  computed: {
+    ...mapGetters(['product'])
+  },
+  methods: {
+    toggleProductDetails() {
+      if (this.product) {
+        this.product.showDetails = !this.product.showDetails;
       }
-
     },
-    mounted() {
-      this.fetchProduct();
-    },
-  };
-  </script>
+  },
+  mounted() {
+    const prodID = this.$route.params.prodID;
+    this.$store.dispatch('fetchProduct', prodID);
+  }
+};
+</script>
 
- 
-  
+<style scoped>
+/* Custom styles if needed */
+</style>

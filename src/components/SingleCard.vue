@@ -1,66 +1,59 @@
 <template>
-    <div class="products-card">
-      <!-- Slot for image -->
-      <slot name="image">
-        <img :src="product.prodUrl || defaultImage" :alt="product.prodName || 'No Name'" />
+  <div class="products-card">
+    <!-- Slot for image -->
+    <slot name="image">
+      <img :src="product.prodUrl || defaultImage" :alt="product.prodName || 'No Name'" />
+    </slot>
+
+    <!-- Slot for title -->
+    <slot name="title">
+      <h3>{{ product.prodName || 'No Name' }}</h3>
+    </slot>
+
+    <!-- Show description and additional details -->
+    <div class="products-details" v-if="showDetails">
+      <slot name="description">
+        <p><strong>Description:</strong> {{ product.prodDescription || 'No Description' }}</p>
+        <p><strong>Features:</strong> {{ product.prodFeatures || 'No Features' }}</p>
+        <p><strong>Sound:</strong> {{ product.prodSound || 'No Sound' }}</p>
+        <p><strong>Package:</strong> {{ product.prodPackage || 'No Package' }}</p>
+        <p><strong>Category:</strong> {{ product.category || 'No Category' }}</p>
+        <p><strong>Quantity:</strong> {{ product.quantity || 0 }}</p>
+        <p><strong>Price:</strong> R{{ product.amount || '0.00' }}</p>
       </slot>
-  
-      <!-- Slot for title -->
-      <slot name="title">
-        <h3>{{ product.prodName || 'No Name' }}</h3>
-      </slot>
-  
-      <!-- Show description and additional details -->
-      <div class="products-details" v-if="showDetails">
-        <slot name="description">
-          <p>{{ product.prodDescription || 'No Description' }}</p>
-          <p><strong>Features:</strong> {{ product.prodFeatures || 'No Features' }}</p>
-          <p><strong>Sound:</strong> {{ product.prodSound || 'No Sound' }}</p>
-          <p><strong>Package:</strong> {{ product.prodPackage || 'No Package' }}</p>
-          <p><strong>Category:</strong> {{ product.category || 'No Category' }}</p>
-          <p><strong>Quantity:</strong> {{ product.quantity || 0 }}</p>
-          <p><strong>Price:</strong> R{{ product.amount || '0.00' }}</p>
-        </slot>
-      </div>
-  
-      <!-- Slot for buttons -->
-      <slot name="button">
-        <button class="products-view-more-btn" @click="toggleProductDetails">
-          {{ showDetails ? 'Show Less' : 'View More' }}
-        </button>
-      </slot>
-  
-      <!-- Custom Slot for additional content -->
-      <div class="oneProd-container">
-        <slot name="oneProd">
-          <!-- Add any custom content for single product card here -->
-        </slot>
-      </div>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    props: {
-      product: {
-        type: Object,
-        default: () => ({})
-      }
-    },
-    data() {
-      return {
-        showDetails: false,
-        defaultImage: 'https://example.com/default-image.jpg'
-      };
-    },
-    methods: {
-      toggleProductDetails() {
-        this.showDetails = !this.showDetails;
-      }
+
+    <!-- Slot for buttons -->
+    <slot name="button">
+      <button class="products-view-more-btn" @click="toggleProductDetails">
+        {{ showDetails ? 'Show Less' : 'View More' }}
+      </button>
+    </slot>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    product: {
+      type: Object,
+      required: true
+    }
+  },
+  data() {
+    return {
+      showDetails: false,
+      defaultImage: 'https://example.com/default-image.jpg'
+    };
+  },
+  methods: {
+    toggleProductDetails() {
+      this.showDetails = !this.showDetails;
     }
   }
-  </script>
-  
+}
+</script>
+
   <style scoped>
   .products-card {
     width: 100%;

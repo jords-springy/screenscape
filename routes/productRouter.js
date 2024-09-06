@@ -13,6 +13,7 @@ router.
         .post(authMiddleware,adminMiddleware,insertProduct)
 router.
     route('/:prodID')
+        .get(fetchProduct)
         .get(authMiddleware,adminMiddleware,getProduct)
         .delete(authMiddleware,adminMiddleware,deleteProduct)
         .put(authMiddleware,adminMiddleware,updateProduct)

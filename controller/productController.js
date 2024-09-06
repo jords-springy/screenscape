@@ -1,6 +1,17 @@
 import { getProductsDb, getProductDb, insertProductDb, deleteProductDb, updateProductDB, addToOrderDB } from '../model/productDb.js';
 import { getUserDb } from '../model/userDb.js';
 
+const fetchProducts = async (req, res) => {
+  try {
+    // Directly fetch products without checking user role
+    const products = await getProductsDb();
+    res.status(200).json({ result: products });
+  } catch (error) {
+    console.error('Error fetching products:', error.message);
+    res.status(500).json({ message: 'Failed to retrieve products', error: error.message });
+  }
+};
+
 const getProducts = async (req, res) => {
     try {
       if (req.user.userRole !== 'admin') {
@@ -119,4 +130,4 @@ const addToOrder = async (req, res) => {
   }
 }
 
-export { getProducts, getProduct, insertProduct, deleteProduct, updateProduct, addToOrder};
+export { getProducts, getProduct, insertProduct, deleteProduct, updateProduct, addToOrder,fetchProducts};

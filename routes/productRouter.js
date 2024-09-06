@@ -1,5 +1,5 @@
 import express from 'express'
-import {getProducts, getProduct, insertProduct, deleteProduct, updateProduct,addToOrder,fetchProducts} from '../controller/productController.js'
+import {getProducts, getProduct, insertProduct, deleteProduct, updateProduct,addToOrder,fetchProducts,fetchProduct} from '../controller/productController.js'
 const router = express.Router()
 import { verifyAToken } from '../middleware/authenticate.js'
 import { authMiddleware , adminMiddleware } from '../middleware/authenticate.js';

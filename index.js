@@ -5,6 +5,8 @@ import userRouter from './routes/userRouter.js';
 import productRouter from './routes/productRouter.js';
 import orderRouter from './routes/orderRouter.js';
 import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+import multer from 'multer';
 // Import the order router
 
 config();
@@ -17,7 +19,9 @@ app.use(cors({
     origin: 'http://localhost:8080',
     credentials: true
 }));
-
+app.use(bodyParser.json()); // For JSON payloads
+app.use(bodyParser.urlencoded({ extended: true }));
+const upload = multer({ dest: 'uploads/' }); // For URL-encoded payloads
 // General API Info Route
 app.get('/', (req, res) => {
     res.send('Welcome to the API. Use /users to get a list of users, /user/:id to get a specific user, /register to create a new user, and /products to get a list of products.');

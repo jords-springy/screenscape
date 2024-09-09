@@ -1,11 +1,12 @@
 <template>
-    <div class="product-page">
-      <div data-aos="fade-down" data-aos-duration="500">
-        <div class="product-header">
-          <h1>Products</h1>
-        </div>
+   <div class="home">
+    <div class="parallax1">
+      <div class="parallax-blur1"></div>
+      <div class="hero-content1">
+        <h1>Book A Cinema</h1>
       </div>
-      <h2>What we offer</h2>
+    </div>
+      <h2>Our Cinemas</h2>
       <div class="content-container">
         <div class="product-grid">
           <CardComp
@@ -192,6 +193,10 @@
   </script>
   
   <style scoped>
+  
+  h2{
+    text-align: center;
+  }
   .product-page {
     display: flex;
     flex-direction: column;
@@ -201,7 +206,37 @@
   .product-header {
     text-align: center;
   }
-  
+  .parallax1 {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  overflow: hidden;
+}
+.parallax-blur1 {
+  background-image: url('https://jords-springy.github.io/hostedimages/images/ssbooking.jpg');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  filter: blur(8px); /* Blur effect */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Ensure the image stays behind the text */
+}
+.hero-content1 {
+  position: relative;
+  z-index: 1; /* Ensure the text stays above the blurred image */
+  color: #5C5347;
+}
+.hero-content1 h1 {
+  color: #fff;
+}
   .content-container {
     display: flex;
     justify-content: space-between;

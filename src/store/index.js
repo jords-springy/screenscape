@@ -2,7 +2,6 @@ import { createStore } from 'vuex';
 import axios from 'axios';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
-import router from '@/router';
 import { useCookies } from 'vue3-cookies';
 
 const { cookies } = useCookies();
@@ -11,7 +10,10 @@ const apiURL = 'https://screenscape.onrender.com/';
 export default createStore({
   state: {
     products: [],
-    product: null
+    product: null,
+    users: [],
+    adminproducts: [], // If used, otherwise remove
+    adminproduct: null // If used, otherwise remove
   },
   mutations: {
     SET_PRODUCTS(state, products) {
@@ -26,78 +28,136 @@ export default createStore({
     SET_ADMINPRODUCT(state, adminproduct) {
       state.adminproduct = adminproduct;
     },
+    SET_USERS(state, users) {
+      state.users = users;
+    },
+    ADD_USER(state, user) {
+      state.users.push(user);
+    },
+    UPDATE_USER(state, updatedUser) {
+      const index = state.users.findIndex(user => user.userID === updatedUser.userID);
+      if (index !== -1) {
+        state.users.splice(index, 1, updatedUser);
+      }
+    },
+    DELETE_USER(state, userID) {
+      state.users = state.users.filter(user => user.userID !== userID);
+    }
   },
   actions: {
     async fetchProducts({ commit }) {
       try {
-        const response = await axios.get('https://screenscape.onrender.com/product');
+        const response = await axios.get(`${apiURL}product`);
         commit('SET_PRODUCTS', response.data.result);
       } catch (error) {
         console.error('Error fetching products:', error);
-        vue3Toastify.toast.error('Failed to fetch products');
+        toast.error('Failed to fetch products');
       }
     },
     async getProducts({ commit }) {
       try {
-        const response = await axios.get('https://screenscape.onrender.com/product');
+        const response = await axios.get(`${apiURL}product`);
         commit('SET_ADMINPRODUCTS', response.data.result);
       } catch (error) {
         console.error('Error fetching products:', error);
-        vue3Toastify.toast.error('Failed to fetch products');
+        toast.error('Failed to fetch products');
       }
     },
     async fetchProduct({ commit }, prodID) {
       try {
-        const response = await axios.get(`https://screenscape.onrender.com/product/${prodID}`);
+        const response = await axios.get(`${apiURL}product/${prodID}`);
         commit('SET_PRODUCT', response.data);
       } catch (error) {
         console.error('Error fetching product:', error);
-        vue3Toastify.toast.error('Failed to fetch product');
+        toast.error('Failed to fetch product');
       }
     },
     async getProduct({ commit }, prodID) {
       try {
-        const response = await axios.get(`https://screenscape.onrender.com/product/${prodID}`);
+        const response = await axios.get(`${apiURL}product/${prodID}`);
         commit('SET_ADMINPRODUCT', response.data);
       } catch (error) {
         console.error('Error fetching product:', error);
-        vue3Toastify.toast.error('Failed to fetch product');
+        toast.error('Failed to fetch product');
       }
     },
     async insertProduct({ dispatch }, productData) {
       try {
-        await axios.post('https://screenscape.onrender.com/product', productData, {
-          headers: { 'Authorization': `Bearer ${getCookie('authToken')}` }
+        await axios.post(`${apiURL}product`, productData, {
+          headers: { 'Authorization': `Bearer ${cookies.get('authToken')}` }
         });
-        vue3Toastify.toast.success('Product added successfully');
+        toast.success('Product added successfully');
         dispatch('fetchProducts');
       } catch (error) {
         console.error('Error adding product:', error);
-        vue3Toastify.toast.error('Failed to add product');
+        toast.error('Failed to add product');
       }
     },
     async deleteProduct({ dispatch }, prodID) {
       try {
-        await axios.delete(`https://screenscape.onrender.com/product/${prodID}`, {
-          headers: { 'Authorization': `Bearer ${getCookie('authToken')}` }
+        await axios.delete(`${apiURL}product/${prodID}`, {
+          headers: { 'Authorization': `Bearer ${cookies.get('authToken')}` }
         });
-        vue3Toastify.toast.success('Product deleted successfully');
+        toast.success('Product deleted successfully');
         dispatch('fetchProducts');
       } catch (error) {
         console.error('Error deleting product:', error);
-        vue3Toastify.toast.error('Failed to delete product');
+        toast.error('Failed to delete product');
       }
     },
     async updateProduct({ dispatch }, { prodID, productData }) {
       try {
-        await axios.put(`https://screenscape.onrender.com/product/${prodID}`, productData, {
-          headers: { 'Authorization': `Bearer ${getCookie('authToken')}` }
+        await axios.put(`${apiURL}product/${prodID}`, productData, {
+          headers: { 'Authorization': `Bearer ${cookies.get('authToken')}` }
         });
-        vue3Toastify.toast.success('Product updated successfully');
+        toast.success('Product updated successfully');
         dispatch('fetchProducts');
       } catch (error) {
         console.error('Error updating product:', error);
-        vue3Toastify.toast.error('Failed to update product');
+        toast.error('Failed to update product');
+      }
+    },
+    async fetchUsers({ commit }) {
+      try {
+        const response = await axios.get(`${apiURL}user`);
+        commit('SET_USERS', response.data.result);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        toast.error('Failed to fetch users');
+      }
+    },
+    async register({ dispatch }, userData) {
+      try {
+        await axios.post(`${apiURL}user`, userData);
+        toast.success('User registered successfully');
+        dispatch('fetchUsers');
+      } catch (error) {
+        console.error('Error registering user:', error);
+        toast.error('Failed to register user');
+      }
+    },
+    async updateUser({ dispatch }, { userID, userData }) {
+      try {
+        await axios.put(`${apiURL}user/${userID}`, userData, {
+          headers: { 'Authorization': `Bearer ${cookies.get('authToken')}` }
+        });
+        toast.success('User updated successfully');
+        dispatch('fetchUsers');
+      } catch (error) {
+        console.error('Error updating user:', error);
+        toast.error('Failed to update user');
+      }
+    },
+    async deleteUser({ dispatch }, userID) {
+      try {
+        await axios.delete(`${apiURL}user/${userID}`, {
+          headers: { 'Authorization': `Bearer ${cookies.get('authToken')}` }
+        });
+        toast.success('User deleted successfully');
+        dispatch('fetchUsers');
+      } catch (error) {
+        console.error('Error deleting user:', error);
+        toast.error('Failed to delete user');
       }
     }
   },
@@ -106,7 +166,6 @@ export default createStore({
     product: state => state.product,
     adminproducts: state => state.adminproducts,
     adminproduct: state => state.adminproduct,
-    
+    users: state => state.users
   }
 });
-

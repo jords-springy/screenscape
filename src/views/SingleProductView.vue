@@ -1,8 +1,9 @@
 <template>
   <div class="product">
-    <SingleCard v-if="product" :product="product">
+    <SingleCard v-if="product" :product="product" :showDetails="showDetails"
+    @toggle-details="toggleProductDetails">
       <template #image>
-        <img :src="product.prodUrl || 'https://example.com/default-image.jpg'" alt="Product Image" />
+        <img :src="product.prodUrl || 'https://example.com/default-image.jpg'" alt="Product Image" class="singleprod"/>
       </template>
 
       <template #title>
@@ -20,8 +21,8 @@
       </template>
 
       <template #button>
-        <button @click="toggleProductDetails">
-          {{ product.showDetails ? 'Show Less' : 'View More' }}
+        <button @click="toggleProducts">
+          {{ product.showDetails ? 'Return to Products': 'Go back' }}
         </button>
       </template>
     </SingleCard>
@@ -41,19 +42,29 @@ export default {
     ...mapGetters(['product'])
   },
   methods: {
-    toggleProductDetails() {
-      if (this.product) {
-        this.product.showDetails = !this.product.showDetails;
-      }
-    },
-  },
-  mounted() {
-    const prodID = this.$route.params.prodID;
-    this.$store.dispatch('fetchProduct', prodID);
+  toggleProducts() {
+    this.$router.push({ name: 'products' });
   }
+},
+  mounted() {
+  const prodID = this.$route.params.prodID;
+  console.log('Mounted with product ID:', prodID); // Check if this is correct
+
+  if (prodID) {
+    this.$store.dispatch('fetchProduct', prodID)
+      .catch(err => console.error('Dispatch failed:', err));
+  } else {
+    console.error('No valid product ID');
+  }
+}
+
 };
 </script>
 
 <style scoped>
 /* Custom styles if needed */
+.singleprod{
+  height: 300px;
+  width:600px
+}
 </style>

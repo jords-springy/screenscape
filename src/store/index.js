@@ -9,7 +9,7 @@ const apiURL = 'https://screenscape.onrender.com/';
 
 export default createStore({
   state: {
-    products: [],
+    products: null,
     product: null,
     users: [],
     adminproducts: [], // If used, otherwise remove
@@ -45,6 +45,7 @@ export default createStore({
     }
   },
   actions: {
+    
     async fetchProducts({ commit }) {
       try {
         const response = await axios.get(`${apiURL}product`);
@@ -65,13 +66,22 @@ export default createStore({
     },
     async fetchProduct({ commit }, prodID) {
       try {
+        if (!prodID) {
+          throw new Error('Invalid Product ID');
+        }
+    
+        console.log('Fetching product with ID:', prodID); // Log the product ID
+    
         const response = await axios.get(`${apiURL}product/${prodID}`);
         commit('SET_PRODUCT', response.data);
       } catch (error) {
         console.error('Error fetching product:', error);
-        toast.error('Failed to fetch product');
+        toast.error('Failed to fetch product. Please try again later.');
       }
     },
+    
+    
+    
     async getProduct({ commit }, prodID) {
       try {
         const response = await axios.get(`${apiURL}product/${prodID}`);
@@ -89,7 +99,12 @@ export default createStore({
         toast.success('Product added successfully');
         dispatch('fetchProducts');
       } catch (error) {
-        console.error('Error adding product:', error);
+        console.error('Error adding product:', {
+          message: error.message,
+          response: error.response?.data,
+          status: error.response?.status,
+          headers: error.response?.headers
+        });
         toast.error('Failed to add product');
       }
     },
@@ -101,7 +116,12 @@ export default createStore({
         toast.success('Product deleted successfully');
         dispatch('fetchProducts');
       } catch (error) {
-        console.error('Error deleting product:', error);
+        console.error('Error deleting product:', {
+          message: error.message,
+          response: error.response?.data,
+          status: error.response?.status,
+          headers: error.response?.headers
+        });
         toast.error('Failed to delete product');
       }
     },
@@ -113,7 +133,12 @@ export default createStore({
         toast.success('Product updated successfully');
         dispatch('fetchProducts');
       } catch (error) {
-        console.error('Error updating product:', error);
+        console.error('Error updating product:', {
+          message: error.message,
+          response: error.response?.data,
+          status: error.response?.status,
+          headers: error.response?.headers
+        });
         toast.error('Failed to update product');
       }
     },
@@ -128,11 +153,34 @@ export default createStore({
     },
     async register({ dispatch }, userData) {
       try {
-        await axios.post(`${apiURL}user`, userData);
+        // Create FormData object for sending data
+        const formData = new FormData();
+        for (const key in userData) {
+          formData.append(key, userData[key]);
+        }
+
+        // POST request to register the user
+        await axios.post(`${apiURL}user/register`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data', // Specifies the content type of the request
+          },
+        });
+
+        // Notify the user of successful registration
         toast.success('User registered successfully');
+
+        // Refresh the list of users
         dispatch('fetchUsers');
       } catch (error) {
-        console.error('Error registering user:', error);
+        // Log detailed error information
+        console.error('Error registering user:', {
+          message: error.message,
+          response: error.response?.data,
+          status: error.response?.status,
+          headers: error.response?.headers
+        });
+
+        // Notify the user of the failure
         toast.error('Failed to register user');
       }
     },

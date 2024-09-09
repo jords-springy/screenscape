@@ -25,10 +25,10 @@
 
     <!-- Slot for buttons -->
     <slot name="button">
-      <button class="products-view-more-btn" @click="toggleProductDetails">
-        {{ showDetails ? 'Show Less' : 'View More' }}
+      <button class="products-return-btn" @click="$emit('return-to-products')">
+        Return to Products
       </button>
-    </slot>
+      </slot>
   </div>
 </template>
 
@@ -42,7 +42,7 @@ export default {
   },
   data() {
     return {
-      showDetails: false,
+      showDetails: true,
       defaultImage: 'https://example.com/default-image.jpg'
     };
   },

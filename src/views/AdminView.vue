@@ -179,7 +179,7 @@
                         </div>
                         <div class="modal-footer d-flex flex-column justify-content-around">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" @click="register" class="btn btn-primary">Save changes</button>
+                            <button type="button"  class="btn btn-primary">Save changes</button>
                         </div>
                         </div>
                     </div>
@@ -408,12 +408,7 @@ let prodUpdatePay = ref({
 
 // const prodPayload = null;
 
-function register() {
-    console.log(addpayload.value);
 
-    
-    store.dispatch('register', addpayload.value)
-}
 
 function addProd() {
     store.dispatch('addAProduct', prodUpdatePay.value)

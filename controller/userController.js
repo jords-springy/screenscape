@@ -119,7 +119,8 @@ const registerUser = async (req, res) => {
   const { firstName, lastName, userAge, gender, userRole, emailAdd, userPass, userProfile } = req.body;
 
   try {
-    // Validate request body
+    console.log('Received registration request:', req.body); // Log request body for debugging
+
     if (!firstName || !lastName || !emailAdd || !userPass) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
@@ -132,7 +133,7 @@ const registerUser = async (req, res) => {
 
     res.status(201).json({ message: 'User registered successfully', token });
   } catch (error) {
-    console.error('Error registering user:', error);
+    console.error('Error registering user:', error); // Log the full error object
     res.status(500).json({ message: 'Error registering user', error: error.message });
   }
 };

@@ -118,17 +118,25 @@ const loginUser = async (req, res) => {
 const registerUser = async (req, res) => {
   const { firstName, lastName, userAge, gender, userRole, emailAdd, userPass, userProfile } = req.body;
 
+  // Validate required fields
+  if (!emailAdd || !userPass) {
+    return res.status(400).json({ message: 'Email and password are required' });
+  }
+
   try {
-    if (!userPass) {
-      throw new Error('Password is required');
-    }
-    const hashedPassword = await bcrypt.hash(userPass, 10); // Ensure userPass is not undefined or null
+    // Hash password
+    const hashedPassword = await bcrypt.hash(userPass, 10);
+    // Determine role
     const role = userRole === 'admin' ? 'admin' : 'user';
+
+    // Insert user into the database
     await insertUserDb(firstName, lastName, userAge, gender, role, emailAdd, hashedPassword, userProfile);
 
-    const token = jwt.sign({ emailAdd, userRole: role }, process.env.SECRET_KEY, { expiresIn: '1h' });
+    // Generate JWT token
+    const token = jwt.sign({ email: emailAdd, role }, process.env.SECRET_KEY, { expiresIn: '1h' });
 
-    res.status(201).json({ message: 'User registered successfully', token }); 
+    // Respond with success
+    res.status(201).json({ message: 'User registered successfully', token });
   } catch (error) {
     console.error('Error registering user:', error.message);
     res.status(500).json({ message: 'Error registering user', error: error.message });

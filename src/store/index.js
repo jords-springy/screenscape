@@ -11,7 +11,7 @@ export default createStore({
   state: {
     products: null,
     product: null,
-    users: [],
+    users: null,
     adminproducts: [], // If used, otherwise remove
     adminproduct: null // If used, otherwise remove
   },
@@ -145,7 +145,7 @@ export default createStore({
     async fetchUsers({ commit }) {
       try {
         const response = await axios.get(`${apiURL}user`);
-        commit('SET_USERS', response.data.result);
+        commit('SET_USERS', response.data);
       } catch (error) {
         console.error('Error fetching users:', error);
         toast.error('Failed to fetch users');

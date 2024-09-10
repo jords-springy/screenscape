@@ -1,10 +1,12 @@
 <template>
     <div class="contact">
       <!-- Contact Us Section with Image Background -->
-      <div data-aos="fade-down" data-aos-duration="500">
-        <div class="contact-header">
-          <h1>Contact Us</h1>
-        </div>
+      <div class="parallax">
+      <div class="parallax-blur2"></div>
+      <div class="hero-content">
+        <h1>Contact Us</h1>
+
+      </div>
       </div>
   
       <!-- Contact Information and Form Section -->
@@ -144,5 +146,40 @@
   
   <style scoped>
   /* Add your styling here */
+  .parallax {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  overflow: hidden;
+}
+.parallax-blur2 {
+  background-image: url('https://jords-springy.github.io/hostedimages/images/sscontact.jpg');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  filter: blur(4px); /* Blur effect */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Ensure the image stays behind the text */
+}
+.hero-content {
+  position: relative;
+  z-index: 1; /* Ensure the text stays above the blurred image */
+  color: #5C5347;
+}
+.hero-content h1 {
+  color: #fff;
+}
+.hero-content p {
+  color: #fff;
+}
+
   </style>
   

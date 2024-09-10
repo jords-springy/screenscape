@@ -3,7 +3,8 @@
     <div class="parallax1">
       <div class="parallax-blur1"></div>
       <div class="hero-content1">
-        <h1>Book A Cinema</h1>
+        <h1>Book Your Own Private Cinema</h1>
+        <p>These cinemas allow any type of movie to be played , on reservation day clients can request what movie</p>
       </div>
     </div>
       <h2>Our Cinemas</h2>
@@ -194,6 +195,9 @@
   
   <style scoped>
   
+  p{
+    color: white
+  }
   h2{
     text-align: center;
   }

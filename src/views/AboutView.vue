@@ -1,12 +1,10 @@
 <template>
   <div class="about">
-    <div data-aos="fade-down" data-aos-duration="500">
-      <div class="section">
-        <img src="https://jords-springy.github.io/hostedimages/images/ssabout.jpg" alt="Landing Page Image" class="landing-image">
-        <div class="spacer"></div>
-        <div class="text">
-          <h1>About Us</h1>
-        </div>
+    <div class="parallax">
+      <div class="parallax-blur2"></div>
+      <div class="hero-content">
+        <h1>About Us</h1>
+
       </div>
     </div>
 
@@ -111,6 +109,41 @@
   margin-top: 5rem;
   margin-bottom: 5rem;
 }
+.parallax {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  overflow: hidden;
+}
+.parallax-blur2 {
+  background-image: url('https://jords-springy.github.io/hostedimages/images/ssabout.jpg');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  filter: blur(8px); /* Blur effect */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Ensure the image stays behind the text */
+}
+.hero-content {
+  position: relative;
+  z-index: 1; /* Ensure the text stays above the blurred image */
+  color: #5C5347;
+}
+.hero-content h1 {
+  color: #fff;
+}
+.hero-content p {
+  color: #fff;
+}
+
 h2 {
   text-align: center;
 }

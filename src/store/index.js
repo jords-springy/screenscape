@@ -32,6 +32,9 @@ export default createStore({
     SET_USERS(state, users) {
       state.users = users;
     },
+    SET_USER(state, user) {
+      state.user = user;
+    },
     ADD_USER(state, user) {
       state.users.push(user);
     },
@@ -152,6 +155,25 @@ export default createStore({
         toast.error('Failed to fetch users');
       }
     },
+    async fetchUser({ commit }, userID) {
+      try {
+        const token = cookies.get('authToken');
+        const response = await axios.get(`${apiURL}user/${userID}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        commit('SET_USER', response.data); // Ensure you have a mutation to handle user data
+        return response.data;
+      } catch (error) {
+        console.error('Failed to fetch user data:', {
+          message: error.message,
+          response: error.response?.data,
+          status: error.response?.status
+        });
+        toast.error('Failed to fetch user data.');
+        throw error;
+      }
+    },
+    
     async register({ commit, dispatch }, userData) {
       try {
         const response = await axios.post(`${apiURL}user/register`, userData, {

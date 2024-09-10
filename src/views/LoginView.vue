@@ -47,7 +47,7 @@
         try {
           await this.login({ emailAdd: this.email, password: this.password });
           toast.success('Login successful!');
-          this.$router.push('/'); // Redirect after login
+          this.$router.push('/dashboard'); // Redirect after login
         } catch (error) {
           toast.error(error.response?.data?.message || 'Login failed');
         }

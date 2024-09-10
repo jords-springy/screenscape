@@ -99,12 +99,15 @@
     </div>
   </div>
 </div>
-
     </div>
   </div>
+ 
 </template>
 
 <style scoped>
+.intro-text{
+  text-align: center;
+}
 #about {
   margin-top: 5rem;
   margin-bottom: 5rem;
@@ -196,5 +199,5 @@ h2 {
     color: #333;
     margin-bottom: 15px;
   }
-
+  
 </style>

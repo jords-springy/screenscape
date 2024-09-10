@@ -59,7 +59,7 @@ const routes = [
     path: '/dashboard',
     name: 'dashboard',
     component: () => import('../views/DashboardView.vue'),
-    
+    props: route => ({ userID: route.query.userID })
   }
 ]
 

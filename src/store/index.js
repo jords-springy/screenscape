@@ -14,7 +14,8 @@ export default createStore({
     users: null,
     adminproducts: [], // If used, otherwise remove
     adminproduct: null, // If used, otherwise remove
-    token: null // Add token to state
+    token: null,
+    userID: null // Add token to state
   },
   mutations: {
     SET_PRODUCTS(state, products) {
@@ -32,8 +33,11 @@ export default createStore({
     SET_USERS(state, users) {
       state.users = users;
     },
+    SET_USER_ID(state, userID) {
+      state.userID = userID;
+    },
     SET_USER(state, user) {
-      state.user = user;
+      state.users = user;
     },
     ADD_USER(state, user) {
       state.users.push(user);
@@ -49,7 +53,7 @@ export default createStore({
     },
     SET_TOKEN(state, token) { // Add the SET_TOKEN mutation
       state.token = token;
-      cookies.set('authToken', token); // Optionally store the token in cookies
+       // Optionally store the token in cookies
     }
   },
   actions: {
@@ -158,10 +162,13 @@ export default createStore({
     async fetchUser({ commit }, userID) {
       try {
         const token = cookies.get('authToken');
+        if (!token) {
+          throw new Error('Authentication token is missing.');
+        }
         const response = await axios.get(`${apiURL}user/${userID}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        commit('SET_USER', response.data); // Ensure you have a mutation to handle user data
+        commit('SET_USER', response.data);
         return response.data;
       } catch (error) {
         console.error('Failed to fetch user data:', {
@@ -173,6 +180,7 @@ export default createStore({
         throw error;
       }
     },
+    
     
     async register({ commit, dispatch }, userData) {
       try {
@@ -201,29 +209,31 @@ export default createStore({
         throw error;
       }
     },
-    async login({ commit }, { emailAdd, password }) {
-      try {
-        const response = await axios.post(`${apiURL}user/login`, { emailAdd, password }, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+    // In your login action
+async login({ commit }, { emailAdd, password }) {
+  try {
+    const response = await axios.post(`${apiURL}user/login`, { emailAdd, password }, {
+      headers: { 'Content-Type': 'application/json' },
+    });
 
-        const { token } = response.data;
-        if (token) {
-          commit('SET_TOKEN', token);
-          toast.success('Login successful');
-        }
-      } catch (error) {
-        console.error('Error logging in:', {
-          message: error.message,
-          response: error.response?.data,
-          status: error.response?.status,
-          headers: error.response?.headers,
-        });
-        toast.error('Failed to login');
-      }
-    },
+    const { token, userID } = response.data;
+    if (token && userID) {
+      commit('SET_TOKEN', token);
+      commit('SET_USER_ID', userID);
+      toast.success('Login successful');
+    }
+  } catch (error) {
+    console.error('Error logging in:', {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status,
+      headers: error.response?.headers,
+    });
+    toast.error('Failed to login');
+  }
+},
+
+    
     async updateUser({ dispatch }, { userID, userData }) {
       try {
         await axios.put(`${apiURL}user/${userID}`, userData, {
@@ -255,6 +265,7 @@ export default createStore({
     adminproducts: state => state.adminproducts,
     adminproduct: state => state.adminproduct,
     users: state => state.users,
-    token: state => state.token // Add getter for token
+    token: state => state.token,
+    userID: state => state.userID // Add getter for token
   }
 });

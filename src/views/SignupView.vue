@@ -1,29 +1,35 @@
 <template>
-  <form @submit.prevent="handleSubmit">
-    <!-- Input fields for form data -->
-    <input v-model="form.firstName" type="text" placeholder="First Name" required />
-    <input v-model="form.lastName" type="text" placeholder="Last Name" required />
-    <input v-model="form.userAge" type="number" placeholder="Age" required />
-    <select v-model="form.gender" required>
-      <option value="male">Male</option>
-      <option value="female">Female</option>
-      <!-- Add more options if needed -->
-    </select>
-    <select v-model="form.userRole" required>
-      <option value="user">User</option>
-      <option value="admin">Admin</option>
-    </select>
-    <input v-model="form.emailAdd" type="email" placeholder="Email" required />
-    <input v-model="form.userPass" type="password" placeholder="Password" required />
-    <input v-model="form.userProfile" type="text" placeholder="Profile Picture URL" />
+  <div class="signup-view">
+    <form @submit.prevent="handleSubmit" class="signup-form">
+      <h2>Register</h2>
+      
+      <!-- Input fields for form data -->
+      <input v-model="form.firstName" type="text" placeholder="First Name" required />
+      <input v-model="form.lastName" type="text" placeholder="Last Name" required />
+      <input v-model="form.userAge" type="number" placeholder="Age" required />
+      <select v-model="form.gender" required>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <!-- Add more options if needed -->
+      </select>
+      <select v-model="form.userRole" required>
+        <option value="user">User</option>
+        <option value="admin">Admin</option>
+      </select>
+      <input v-model="form.emailAdd" type="email" placeholder="Email" required />
+      <input v-model="form.userPass" type="password" placeholder="Password" required />
+      <input v-model="form.userProfile" type="text" placeholder="Profile Picture URL" />
 
-    <button type="submit">Register</button>
-  </form>
+      <button type="submit">Register</button>
+      <a href="/login">Already registered ? Go To Login</a>
+    </form>
+  </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
 import { useRouter } from 'vue-router';
+import { toast } from 'vue3-toastify';
 
 export default {
   data() {
@@ -44,54 +50,91 @@ export default {
     ...mapActions(['register']),
     
     async handleSubmit() {
-  try {
-    // Attempt to register the user
-    await this.register(this.form);
+      try {
+        // Attempt to register the user
+        await this.register(this.form);
 
-    // Ensure $toast is available
-    if (this.$toast && typeof this.$toast.success === 'function') {
-      this.$toast.success('Registration successful!');
-    } else {
-      console.warn('Toast notifications are not initialized.');
-    }
+        // Show success toast
+        toast.success('Registration successful!');
 
-    // Redirect to the login page
-    if (this.$router && typeof this.$router.push === 'function') {
-      this.$router.push('/login');
-    } else {
-      console.warn('Router is not initialized.');
-    }
-  } catch (error) {
-    // Log the entire error object for debugging
-    console.error('Error in handleSubmit:', error);
+        // Redirect to the login page
+        this.$router.push('/login');
+      } catch (error) {
+        // Log the entire error object for debugging
+        console.error('Error in handleSubmit:', error);
 
-    // Safeguard: Handle different error scenarios
-    let errorMessage = 'An unexpected error occurred.';
+        // Safeguard: Handle different error scenarios
+        let errorMessage = 'An unexpected error occurred.';
 
-    // Check if error is defined and is an object
-    if (error && typeof error === 'object') {
-      if (error.response) {
-        // Check if error.response.data exists and is an object
-        if (error.response.data && typeof error.response.data === 'object') {
-          // Safely extract the error message
-          errorMessage = error.response.data.error || 'An error occurred during registration.';
-        } else {
-          errorMessage = 'Error response data is not properly formatted.';
+        if (error && typeof error === 'object') {
+          if (error.response && error.response.data) {
+            errorMessage = error.response.data.error || 'An error occurred during registration.';
+          } else if (error.message) {
+            errorMessage = error.message;
+          }
         }
-      } else if (error.message) {
-        // Use the error message if available
-        errorMessage = error.message;
+
+        // Show error toast
+        toast.error(`Registration failed: ${errorMessage}`);
       }
     }
-
-    // Ensure $toast is available
-    if (this.$toast && typeof this.$toast.error === 'function') {
-      this.$toast.error(`Registration failed: ${errorMessage}`);
-    } else {
-      console.warn('Toast notifications are not initialized.');
-    }
   }
-}
-  }
-}
+};
 </script>
+
+<style scoped>
+a{
+  text-decoration-color: #950101;
+  color:#950101;
+}
+.signup-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+
+.signup-form {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 600px;
+}
+
+.signup-form h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.signup-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.signup-form input,
+.signup-form select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: black;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+button:hover {
+  background-color: #950101;
+}
+</style>

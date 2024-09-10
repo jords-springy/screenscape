@@ -179,8 +179,29 @@ export default createStore({
         throw error;
       }
     },
-    
-    
+    async login({ commit }, { emailAdd, password }) {
+      try {
+        const response = await axios.post(`${apiURL}user/login`, { emailAdd, password }, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const { token } = response.data;
+        if (token) {
+          commit('SET_TOKEN', token);
+          toast.success('Login successful');
+        }
+      } catch (error) {
+        console.error('Error logging in:', {
+          message: error.message,
+          response: error.response?.data,
+          status: error.response?.status,
+          headers: error.response?.headers,
+        });
+        toast.error('Failed to login');
+      }
+    },
     async updateUser({ dispatch }, { userID, userData }) {
       try {
         await axios.put(`${apiURL}user/${userID}`, userData, {

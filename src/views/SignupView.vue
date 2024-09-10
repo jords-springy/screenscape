@@ -1,122 +1,97 @@
 <template>
-  <div>
-    <h1>Register</h1>
-    <form @submit.prevent="handleSubmit">
-      <div>
-        <label>First Name:</label>
-        <input v-model="form.firstName" type="text" required />
-      </div>
-      <div>
-        <label>Last Name:</label>
-        <input v-model="form.lastName" type="text" required />
-      </div>
-      <div>
-        <label>Age:</label>
-        <input v-model="form.userAge" type="number" required />
-      </div>
-      <div>
-        <label>Gender:</label>
-        <select v-model="form.gender" required>
-          <option value="" disabled>Select Gender</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-      <div>
-        <label>Role:</label>
-        <select v-model="form.userRole" required>
-          <option value="" disabled>Select Role</option>
-          <option value="User">User</option>
-          <option value="Admin">Admin</option>
-        </select>
-      </div>
-      <div>
-        <label>Email:</label>
-        <input v-model="form.emailAdd" type="email" required />
-      </div>
-      <div>
-        <label>Password:</label>
-        <input v-model="form.userPass" type="password" required />
-      </div>
-      <div>
-        <label>Profile Picture URL:</label>
-        <input v-model="form.userProfile" type="text" />
-      </div>
-      <button type="submit">Submit</button>
-      <p v-if="errorMessage">{{ errorMessage }}</p>
-    </form>
-  </div>
+  <form @submit.prevent="handleSubmit">
+    <!-- Input fields for form data -->
+    <input v-model="form.firstName" type="text" placeholder="First Name" required />
+    <input v-model="form.lastName" type="text" placeholder="Last Name" required />
+    <input v-model="form.userAge" type="number" placeholder="Age" required />
+    <select v-model="form.gender" required>
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+      <!-- Add more options if needed -->
+    </select>
+    <select v-model="form.userRole" required>
+      <option value="user">User</option>
+      <option value="admin">Admin</option>
+    </select>
+    <input v-model="form.emailAdd" type="email" placeholder="Email" required />
+    <input v-model="form.userPass" type="password" placeholder="Password" required />
+    <input v-model="form.userProfile" type="text" placeholder="Profile Picture URL" />
+
+    <button type="submit">Register</button>
+  </form>
 </template>
 
 <script>
-import { ref } from 'vue';
-import { useStore } from 'vuex';
+import { mapActions } from 'vuex';
+import { useRouter } from 'vue-router';
 
 export default {
-  setup() {
-    const store = useStore();
-    const form = ref({
-      firstName: '',
-      lastName: '',
-      userAge: '',
-      gender: '',
-      userRole: '',
-      emailAdd: '',
-      userPass: '',
-      userProfile: 'https://codjoelmayer.github.io/projectImages/images/profile-Image.png',
-    });
-    const errorMessage = ref('');
-
-    const handleSubmit = async () => {
-      try {
-        errorMessage.value = ''; // Clear previous errors
-
-        // Create FormData object for sending data
-        const formData = new FormData();
-        for (const key in form.value) {
-          formData.append(key, form.value[key]);
-        }
-
-        // Dispatch the register action with formData
-        await store.dispatch('register', formData);
-
-        // Handle successful registration (e.g., redirect or show success message)
-        // For example: router.push('/login'); or show a success message
-
-      } catch (error) {
-        // Handle registration error
-        errorMessage.value = 'Registration failed. Please try again.';
-        console.error('Registration failed:', error);
-      }
-    };
-
+  data() {
     return {
-      form,
-      handleSubmit,
-      errorMessage
+      form: {
+        firstName: '',
+        lastName: '',
+        userAge: '',
+        gender: '',
+        userRole: '',
+        emailAdd: '',
+        userPass: '',
+        userProfile: '', // Handle as URL or placeholder if no file upload
+      },
     };
   },
-};
+  methods: {
+    ...mapActions(['register']),
+    
+    async handleSubmit() {
+  try {
+    // Attempt to register the user
+    await this.register(this.form);
+
+    // Ensure $toast is available
+    if (this.$toast && typeof this.$toast.success === 'function') {
+      this.$toast.success('Registration successful!');
+    } else {
+      console.warn('Toast notifications are not initialized.');
+    }
+
+    // Redirect to the login page
+    if (this.$router && typeof this.$router.push === 'function') {
+      this.$router.push('/login');
+    } else {
+      console.warn('Router is not initialized.');
+    }
+  } catch (error) {
+    // Log the entire error object for debugging
+    console.error('Error in handleSubmit:', error);
+
+    // Safeguard: Handle different error scenarios
+    let errorMessage = 'An unexpected error occurred.';
+
+    // Check if error is defined and is an object
+    if (error && typeof error === 'object') {
+      if (error.response) {
+        // Check if error.response.data exists and is an object
+        if (error.response.data && typeof error.response.data === 'object') {
+          // Safely extract the error message
+          errorMessage = error.response.data.error || 'An error occurred during registration.';
+        } else {
+          errorMessage = 'Error response data is not properly formatted.';
+        }
+      } else if (error.message) {
+        // Use the error message if available
+        errorMessage = error.message;
+      }
+    }
+
+    // Ensure $toast is available
+    if (this.$toast && typeof this.$toast.error === 'function') {
+      this.$toast.error(`Registration failed: ${errorMessage}`);
+    } else {
+      console.warn('Toast notifications are not initialized.');
+    }
+  }
+}
+  }
+}
 </script>
-
-<style scoped>
-.signup-view {
-  text-align: center;
-  margin-top: 20px;
-}
-
-table {
-  margin: auto;
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 10px;
-  border: 1px solid #ddd;
-}
-
-button {
-  margin-top: 10px;
-}
-</style>

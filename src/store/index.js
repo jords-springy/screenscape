@@ -13,7 +13,8 @@ export default createStore({
     product: null,
     users: null,
     adminproducts: [], // If used, otherwise remove
-    adminproduct: null // If used, otherwise remove
+    adminproduct: null, // If used, otherwise remove
+    token: null // Add token to state
   },
   mutations: {
     SET_PRODUCTS(state, products) {
@@ -42,10 +43,13 @@ export default createStore({
     },
     DELETE_USER(state, userID) {
       state.users = state.users.filter(user => user.userID !== userID);
+    },
+    SET_TOKEN(state, token) { // Add the SET_TOKEN mutation
+      state.token = token;
+      cookies.set('authToken', token); // Optionally store the token in cookies
     }
   },
   actions: {
-    
     async fetchProducts({ commit }) {
       try {
         const response = await axios.get(`${apiURL}product`);
@@ -79,9 +83,6 @@ export default createStore({
         toast.error('Failed to fetch product. Please try again later.');
       }
     },
-    
-    
-    
     async getProduct({ commit }, prodID) {
       try {
         const response = await axios.get(`${apiURL}product/${prodID}`);
@@ -151,39 +152,35 @@ export default createStore({
         toast.error('Failed to fetch users');
       }
     },
-    async register({ dispatch }, userData) {
+    async register({ commit, dispatch }, userData) {
       try {
-        // Create FormData object for sending data
-        const formData = new FormData();
-        for (const key in userData) {
-          formData.append(key, userData[key]);
-        }
-
-        // POST request to register the user
-        await axios.post(`${apiURL}user/register`, formData, {
+        const response = await axios.post(`${apiURL}user/register`, userData, {
           headers: {
-            'Content-Type': 'multipart/form-data', // Specifies the content type of the request
+            'Content-Type': 'application/json',
           },
         });
-
-        // Notify the user of successful registration
+    
+        const { token } = response.data;
+        if (token) {
+          commit('SET_TOKEN', token);
+        }
+    
         toast.success('User registered successfully');
-
-        // Refresh the list of users
         dispatch('fetchUsers');
       } catch (error) {
-        // Log detailed error information
         console.error('Error registering user:', {
           message: error.message,
           response: error.response?.data,
           status: error.response?.status,
-          headers: error.response?.headers
+          headers: error.response?.headers,
         });
-
-        // Notify the user of the failure
-        toast.error('Failed to register user');
+    
+        // Throw the error to be handled by the component
+        throw error;
       }
     },
+    
+    
     async updateUser({ dispatch }, { userID, userData }) {
       try {
         await axios.put(`${apiURL}user/${userID}`, userData, {
@@ -214,6 +211,7 @@ export default createStore({
     product: state => state.product,
     adminproducts: state => state.adminproducts,
     adminproduct: state => state.adminproduct,
-    users: state => state.users
+    users: state => state.users,
+    token: state => state.token // Add getter for token
   }
 });

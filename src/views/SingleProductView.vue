@@ -24,6 +24,9 @@
         <button @click="toggleProducts">
           {{ product.showDetails ? 'Return to Products': 'Go back' }}
         </button>
+        <button @click="toggleProducts">
+          {{ product.showDetails ? "Added To Order" : "Add To Order"}}
+        </button>
       </template>
     </SingleCard>
   </div>

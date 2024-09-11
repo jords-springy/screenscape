@@ -12,6 +12,7 @@ export default createStore({
     products: null,
     product: null,
     users: null,
+    user:null,
     adminproducts: [], // If used, otherwise remove
     adminproduct: null, // If used, otherwise remove
     token: null,
@@ -38,6 +39,9 @@ export default createStore({
     },
     SET_USER(state, user) {
       state.users = user;
+    },
+    SET_USER_DATA(state, userData) {
+      state.user = userData;  // Store the fetched user data
     },
     ADD_USER(state, user) {
       state.users.push(user);
@@ -210,28 +214,37 @@ export default createStore({
       }
     },
     // In your login action
-async login({ commit }, { emailAdd, password }) {
-  try {
-    const response = await axios.post(`${apiURL}user/login`, { emailAdd, password }, {
-      headers: { 'Content-Type': 'application/json' },
-    });
-
-    const { token, userID } = response.data;
-    if (token && userID) {
-      commit('SET_TOKEN', token);
-      commit('SET_USER_ID', userID);
-      toast.success('Login successful');
-    }
-  } catch (error) {
-    console.error('Error logging in:', {
-      message: error.message,
-      response: error.response?.data,
-      status: error.response?.status,
-      headers: error.response?.headers,
-    });
-    toast.error('Failed to login');
-  }
-},
+    async login({ commit, dispatch }, { emailAdd, password }) {
+      try {
+        const response = await axios.post(`${apiURL}user/login`, { emailAdd, password }, {
+          headers: { 'Content-Type': 'application/json' },
+        });
+  
+        const { token } = response.data;
+        if (token) {
+          commit('SET_TOKEN', token);
+          // Store the token in cookies or local storage
+          cookies.set('authToken', token, '1d');
+          toast.success('Login successful');
+          
+          // Fetch user data after successful login
+          await dispatch('fetchCurrentUser');
+        } else {
+          throw new Error('No token received');
+        }
+      } catch (error) {
+        console.error('Error logging in:', {
+          message: error.message,
+          response: error.response?.data,
+          status: error.response?.status,
+          headers: error.response?.headers,
+        });
+        toast.error('Failed to login');
+      }
+    },
+    
+    
+    
 
     
     async updateUser({ dispatch }, { userID, userData }) {
@@ -257,7 +270,36 @@ async login({ commit }, { emailAdd, password }) {
         console.error('Error deleting user:', error);
         toast.error('Failed to delete user');
       }
+    },
+    async fetchCurrentUser({ commit, state }) {
+      try {
+        const token = state.token || cookies.get('authToken');
+        if (!token) {
+          throw new Error('Authentication token is missing.');
+        }
+        const response = await axios.get(`${apiURL}user/me`, {
+          headers: { 
+            'Authorization': `Bearer ${token}`, 
+            'Content-Type': 'application/json' 
+          }
+        });
+        commit('SET_USER_DATA', response.data);  // Commit the fetched user data
+      } catch (error) {
+        console.error('Error fetching user data:', {
+          message: error.message,
+          response: error.response?.data,
+          status: error.response?.status,
+          headers: error.response?.headers,
+        });
+        toast.error('Failed to fetch user data');
+      }
     }
+  
+  
+    
+    
+  
+    
   },
   getters: {
     products: state => state.products,
@@ -265,7 +307,11 @@ async login({ commit }, { emailAdd, password }) {
     adminproducts: state => state.adminproducts,
     adminproduct: state => state.adminproduct,
     users: state => state.users,
-    token: state => state.token,
-    userID: state => state.userID // Add getter for token
+      userID: state => state.userID,   // Ensure this is correctly retrieving the userID
+      token: state => state.token,     // Ensure this is correctly retrieving the token
+      getUser: state => state.user     // This retrieves the user data
+
+    
+    // Add getter for token
   }
-});
+})

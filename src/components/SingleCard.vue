@@ -28,6 +28,9 @@
       <button class="products-return-btn" @click="$emit('return-to-products')">
         Return to Products
       </button>
+      <button class="products-cart-btn" @click="$emit('add-to-cart')">
+        Add To Cart
+      </button>
       </slot>
   </div>
 </template>

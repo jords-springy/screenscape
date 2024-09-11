@@ -18,15 +18,14 @@
 <script>
 export default {
   name: 'DashboardView',
-  mounted() {
-  const userID = this.$store.getters.userID;  // Get userID from Vuex
+  mounted() { // Get userID from Vuex
   const token = this.$store.getters.token;    // Get token from Vuex
   
-  if (userID && token) {
-    console.log('UserID and Token are available:', userID, token);  // Log for debugging
-    this.$store.dispatch('fetchCurrentUser');  // Fetch the user data
+  if (token) {
+    console.log('Token are available:', token);  // Log for debugging
+    this.$store.dispatch('fetchUser');  // Fetch the user data
   } else {
-    console.error('User ID or Token is missing. Cannot fetch user data.');
+    console.error('Token is missing. Cannot fetch user data.');
   }
 },
 

@@ -53,10 +53,8 @@
         }
       }
     }
-  }
+  };
   </script>
-  
-  
   
   <style scoped>
   .login-view {

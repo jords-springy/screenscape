@@ -1,7 +1,7 @@
 <template>
   <div class="product">
     <SingleCard v-if="product" :product="product" :showDetails="showDetails"
-    @toggle-details="toggleProductDetails">
+    @toggle-details="toggleProductDetails" @add-to-orders="handleAddToOrders">
       <template #image>
         <img :src="product.prodUrl || 'https://example.com/default-image.jpg'" alt="Product Image" class="singleprod"/>
       </template>
@@ -24,9 +24,7 @@
         <button @click="toggleProducts">
           {{ product.showDetails ? 'Return to Products': 'Go back' }}
         </button>
-        <button @click="toggleProducts">
-          {{ product.showDetails ? "Added To Order" : "Add To Order"}}
-        </button>
+        <button @click="addToOrders">Add to Orders</button>
       </template>
     </SingleCard>
   </div>
@@ -47,7 +45,20 @@ export default {
   methods: {
   toggleProducts() {
     this.$router.push({ name: 'products' });
-  }
+  },
+  handleAddToOrders(product) {
+      // Handle the logic to add the product to orders
+      axios.post("https://screenscape.onrender.com/order", {
+        prodID: product.id, // Or however your API expects it
+        quantity: 1, // You can add quantity management later
+      })
+      .then(response => {
+        console.log("Product added to orders:", response.data);
+      })
+      .catch(error => {
+        console.error("Error adding to orders:", error);
+      });
+    },
 },
   mounted() {
   const prodID = this.$route.params.prodID;

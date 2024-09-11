@@ -31,6 +31,7 @@
       <button class="products-cart-btn" @click="$emit('add-to-cart')">
         Add To Cart
       </button>
+      <button class="add-to-orders" @click="$emit('add-to-orders')">Add To Order</button> 
       </slot>
   </div>
 </template>
@@ -52,6 +53,9 @@ export default {
   methods: {
     toggleProductDetails() {
       this.showDetails = !this.showDetails;
+    },
+    addToOrders() {
+      this.$emit('add-to-orders', this.product)
     }
   }
 }

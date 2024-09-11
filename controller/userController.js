@@ -107,12 +107,18 @@ const loginUser = async (req, res) => {
       maxAge: 60 * 60 * 1000 // 1 hour
     });
 
-    res.status(200).json({ message: 'Login successful' }); 
+    // Include the token in the response body
+    res.status(200).json({ 
+      message: 'Login successful',
+      token // Send token in response
+    }); 
   } catch (error) {
     console.error('Login Error:', error);
     res.status(500).json({ message: 'Error logging in', error: error.message });
   }
 };
+
+
 
 
 const registerUser = async (req, res) => {

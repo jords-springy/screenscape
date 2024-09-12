@@ -12,14 +12,12 @@ export default createStore({
     products: null,
     product: null,
     users: null,
-    adminproducts: [], // If used, otherwise remove
-    adminproduct: null, // If used, otherwise remove
-    token: null,
-    userID: null ,
+    adminproducts: [],
+    adminproduct: null,
+    token: cookies.get('authToken') || null, // Initialize token from cookies
+    userID: null,
     userData: null,
-    orders : [],
-
-    // Add token to state
+    orders: [],
   },
   mutations: {
     SET_PRODUCTS(state, products) {
@@ -38,10 +36,11 @@ export default createStore({
       state.users = users;
     },
     SET_USER_ID(state, userID) {
+      console.log('Setting userID in mutation:', userID);
       state.userID = userID;
     },
     SET_USER(state, user) {
-      state.users = user;
+      state.userData = user;
     },
     ADD_USER(state, user) {
       state.users.push(user);
@@ -55,14 +54,17 @@ export default createStore({
     DELETE_USER(state, userID) {
       state.users = state.users.filter(user => user.userID !== userID);
     },
-    SET_TOKEN(state, token) { // Add the SET_TOKEN mutation
+    SET_TOKEN(state, token) {
       state.token = token;
-       // Optionally store the token in cookies
+      cookies.set('authToken', token, '1d');
+    },
+    CLEAR_TOKEN(state) {
+      state.token = null;
+      cookies.remove('authToken');
     },
     SET_ORDERS(state, orders) {
       state.orders = orders;
     }
-  
   },
   actions: {
     async fetchProducts({ commit }) {
@@ -88,9 +90,7 @@ export default createStore({
         if (!prodID) {
           throw new Error('Invalid Product ID');
         }
-    
-        console.log('Fetching product with ID:', prodID); // Log the product ID
-    
+        console.log('Fetching product with ID:', prodID);
         const response = await axios.get(`${apiURL}product/${prodID}`);
         commit('SET_PRODUCT', response.data);
       } catch (error) {
@@ -110,51 +110,36 @@ export default createStore({
     async insertProduct({ dispatch }, productData) {
       try {
         await axios.post(`${apiURL}product`, productData, {
-          headers: { 'Authorization': `Bearer ${cookies.get('authToken')}` }
+          headers: { 'Authorization': `Bearer ${this.state.token}` }
         });
         toast.success('Product added successfully');
         dispatch('fetchProducts');
       } catch (error) {
-        console.error('Error adding product:', {
-          message: error.message,
-          response: error.response?.data,
-          status: error.response?.status,
-          headers: error.response?.headers
-        });
+        console.error('Error adding product:', error);
         toast.error('Failed to add product');
       }
     },
     async deleteProduct({ dispatch }, prodID) {
       try {
         await axios.delete(`${apiURL}product/${prodID}`, {
-          headers: { 'Authorization': `Bearer ${cookies.get('authToken')}` }
+          headers: { 'Authorization': `Bearer ${this.state.token}` }
         });
         toast.success('Product deleted successfully');
         dispatch('fetchProducts');
       } catch (error) {
-        console.error('Error deleting product:', {
-          message: error.message,
-          response: error.response?.data,
-          status: error.response?.status,
-          headers: error.response?.headers
-        });
+        console.error('Error deleting product:', error);
         toast.error('Failed to delete product');
       }
     },
     async updateProduct({ dispatch }, { prodID, productData }) {
       try {
         await axios.put(`${apiURL}product/${prodID}`, productData, {
-          headers: { 'Authorization': `Bearer ${cookies.get('authToken')}` }
+          headers: { 'Authorization': `Bearer ${this.state.token}` }
         });
         toast.success('Product updated successfully');
         dispatch('fetchProducts');
       } catch (error) {
-        console.error('Error updating product:', {
-          message: error.message,
-          response: error.response?.data,
-          status: error.response?.status,
-          headers: error.response?.headers
-        });
+        console.error('Error updating product:', error);
         toast.error('Failed to update product');
       }
     },
@@ -167,13 +152,17 @@ export default createStore({
         toast.error('Failed to fetch users');
       }
     },
-    async fetchUser({ commit }, userID) {
+    async fetchUser({ commit, state }, userID) {
       try {
-        const token = cookies.get('authToken');
+        const token = cookies.get('authToken') || state.token;
         if (!token) {
           throw new Error('Authentication token is missing.');
         }
-        const response = await axios.get(`${apiURL}user/${state.userID}`, {
+        const id = userID || state.userID;
+        if (!id) {
+          throw new Error('UserID is missing.');
+        }
+        const response = await axios.get(`${apiURL}user/${id}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         commit('SET_USER', response.data);
@@ -188,8 +177,6 @@ export default createStore({
         throw error;
       }
     },
-    
-    
     async register({ commit, dispatch }, userData) {
       try {
         const response = await axios.post(`${apiURL}user/register`, userData, {
@@ -197,56 +184,37 @@ export default createStore({
             'Content-Type': 'application/json',
           },
         });
-    
         const { token } = response.data;
         if (token) {
           commit('SET_TOKEN', token);
         }
-    
         toast.success('User registered successfully');
         dispatch('fetchUsers');
       } catch (error) {
-        console.error('Error registering user:', {
-          message: error.message,
-          response: error.response?.data,
-          status: error.response?.status,
-          headers: error.response?.headers,
-        });
-    
-        // Throw the error to be handled by the component
+        console.error('Error registering user:', error);
+        toast.error('Failed to register user');
         throw error;
       }
     },
-    // In your login action
     async login({ commit, dispatch }, { emailAdd, password }) {
       try {
-        const response = await axios.post(`${apiURL}user/login`, { emailAdd, password }, {
-          headers: { 'Content-Type': 'application/json' },
-        });
-  
-        const { token } = response.data;
+        const response = await axios.post(`${apiURL}user/login`, { emailAdd, password });
+        const { token, userID } = response.data;
         if (token) {
           commit('SET_TOKEN', token);
-          // Store the token in cookies or local storage
+          commit('SET_USER_ID', userID); // Set userID in state
           cookies.set('authToken', token, '1d');
-          toast.success('Login successful');
+          // Optionally, you can call fetchUser here, but ensure it is updated to handle missing userID gracefully
         }
       } catch (error) {
-        console.error('Error logging in:', {
-          message: error.message,
-          response: error.response?.data,
-          status: error.response?.status,
-          headers: error.response?.headers,
-        });
-        toast.error('Failed to login');
+        console.error('Login error:', error);
+        throw error;
       }
     },
-
-    
     async updateUser({ dispatch }, { userID, userData }) {
       try {
         await axios.put(`${apiURL}user/${userID}`, userData, {
-          headers: { 'Authorization': `Bearer ${cookies.get('authToken')}` }
+          headers: { 'Authorization': `Bearer ${this.state.token}` }
         });
         toast.success('User updated successfully');
         dispatch('fetchUsers');
@@ -258,7 +226,7 @@ export default createStore({
     async deleteUser({ dispatch }, userID) {
       try {
         await axios.delete(`${apiURL}user/${userID}`, {
-          headers: { 'Authorization': `Bearer ${cookies.get('authToken')}` }
+          headers: { 'Authorization': `Bearer ${this.state.token}` }
         });
         toast.success('User deleted successfully');
         dispatch('fetchUsers');
@@ -266,34 +234,44 @@ export default createStore({
         console.error('Error deleting user:', error);
         toast.error('Failed to delete user');
       }
-      }
     },
-    async fetchOrders({ commit }) {
+    async fetchOrders({ commit, state }) {
       try {
-        const response = await axios.get(`/api/orders`);
-        commit('setOrders', response.data || []); // Handle if response data is undefined
+        const token = cookies.get('authToken') || state.token;
+        if (!token) {
+          throw new Error('Authentication token is missing.');
+        }
+        const response = await axios.get(`${apiURL}user/${state.userID}/order`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        commit('SET_ORDERS', response.data || []);
       } catch (error) {
         console.error('Error fetching orders:', error);
+        toast.error('Failed to fetch orders');
       }
     },
-  
-  
-    
-    
-    
-  
-    
+    async logoutUser({ commit }) {
+      try {
+        await axios.post(`${apiURL}user/logout`, {}, {
+          headers: { 'Authorization': `Bearer ${this.state.token}` }
+        });
+        commit('CLEAR_TOKEN');
+        toast.success('Logged out successfully');
+      } catch (error) {
+        console.error('Error logging out:', error);
+        toast.error('Failed to log out');
+      }
+    }
+  },
   getters: {
     products: state => state.products,
     product: state => state.product,
     adminproducts: state => state.adminproducts,
     adminproduct: state => state.adminproduct,
     users: state => state.users,
-      userID: state => state.userID,   // Ensure this is correctly retrieving the userID
-      token: state => state.token,     // Ensure this is correctly retrieving the token
-      getUser: state => state.user  ,   // This retrieves the user data
+    userID: state => state.userID,
+    token: state => state.token,
+    userData: state => state.userData,
     orders: state => state.orders
-    
-    // Add getter for token
   }
-})
+});

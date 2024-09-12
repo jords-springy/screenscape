@@ -33,6 +33,7 @@
 <script>
 import SingleCard from "@/components/SingleCard.vue";
 import { mapGetters } from "vuex";
+import axios from "axios";
 
 export default {
   name: "SingleProductView",
@@ -48,7 +49,7 @@ export default {
   },
   handleAddToOrders(product) {
       // Handle the logic to add the product to orders
-      axios.post("https://screenscape.onrender.com/order", {
+      axios.post(`https://screenscape.onrender.com/user/${userID}/order`, {
         prodID: product.id, // Or however your API expects it
         quantity: 1, // You can add quantity management later
       })

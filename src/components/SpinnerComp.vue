@@ -1,12 +1,43 @@
 <template>
-
+  <div v-if="isLoading" class="spinner-overlay">
+    <div class="spinner"></div>
+  </div>
 </template>
-<script>
 
-export default{
-    
+<script>
+export default {
+  props: {
+    isLoading: {
+      type: Boolean,
+      required: true
+    }
+  }
 }
 </script>
-<style scoped>
 
+<style>
+.spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+}
+.spinner {
+  border: 16px solid black;
+  border-top: solid #950101;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 </style>

@@ -6,34 +6,23 @@ config()
 
 
 const authMiddleware = (req, res, next) => {
-  // Get the token from the cookies
   const token = req.cookies.jwt;
-
-  // Check if the token exists in the cookie
   if (!token) {
-    console.error('Token is missing');
+    console.error('No token found');
     return res.status(403).json({ message: 'Token is required' });
   }
 
   try {
-    // Verify the token
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
     console.log('Decoded Token:', decoded);
-
-    // Store the user data (decoded token payload) in the request object
     req.user = decoded;
-
-    // Call the next middleware or route handler
     next();
   } catch (error) {
-    // If verification fails, send an unauthorized response
     console.error('Token verification failed:', error.message);
-    return res.status(403).json({
-      message: 'Invalid token',
-      error: error.message
-    });
+    return res.status(403).json({ message: 'Invalid token', error: error.message });
   }
 };
+
 
 
 

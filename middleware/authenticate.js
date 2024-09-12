@@ -11,6 +11,7 @@ const authMiddleware = (req, res, next) => {
 
   // Check if the token exists in the cookie
   if (!token) {
+    console.error('Token is missing');
     return res.status(403).json({ message: 'Token is required' });
   }
 
@@ -26,13 +27,14 @@ const authMiddleware = (req, res, next) => {
     next();
   } catch (error) {
     // If verification fails, send an unauthorized response
-    console.error('Token verification failed:', error);
+    console.error('Token verification failed:', error.message);
     return res.status(403).json({
       message: 'Invalid token',
       error: error.message
     });
   }
 };
+
 
 
 

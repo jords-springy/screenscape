@@ -10,7 +10,7 @@ router.
     route('/')
         .get(fetchProducts)
         .get(authMiddleware,adminMiddleware,getProducts)
-        .post(authMiddleware,adminMiddleware,insertProduct)
+        .post(adminMiddleware,insertProduct)
 router.
     route('/:prodID')
         .get(fetchProduct)

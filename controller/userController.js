@@ -144,8 +144,16 @@ const registerUser = async (req, res) => {
   }
 };
 
+const logoutUser = async (req, res) => {
+  try {
+    req.token = null;
+    res.json({ message: 'You logged out successfully' });
+  } catch (error) {
+    console.error('Error logging out:', error);
+    res.status(500).json({ message: 'Error logging out' });
+  }
+}
 
 
 
-
-export {getUsers, getUser, insertUser, deleteUser, updateUser,loginUser,registerUser}
+export {getUsers, getUser, insertUser, deleteUser, updateUser,loginUser,logoutUser,registerUser}

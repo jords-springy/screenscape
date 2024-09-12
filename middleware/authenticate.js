@@ -16,9 +16,8 @@ const authMiddleware = (req, res, next) => {
 
   try {
     // Verify the token
-    req.body.token = token
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    console.log('Decoded Token:',decoded);
+    console.log('Decoded Token:', decoded);
 
     // Store the user data (decoded token payload) in the request object
     req.user = decoded;
@@ -27,12 +26,14 @@ const authMiddleware = (req, res, next) => {
     next();
   } catch (error) {
     // If verification fails, send an unauthorized response
+    console.error('Token verification failed:', error);
     return res.status(403).json({
       message: 'Invalid token',
       error: error.message
     });
   }
 };
+
 
 
 

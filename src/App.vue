@@ -8,6 +8,7 @@
       <div v-if="products.length">
         <!-- Product display logic here -->
       </div>
+  
     </div>
   </div>
 </template>
@@ -20,11 +21,13 @@ import FooterComp from './components/FooterComp.vue';
 import SpinnerComp from './components/SpinnerComp.vue';
 import axios from 'axios';
 
+
 export default {
   components: {
     NavBarComp,
     FooterComp,
-    SpinnerComp
+    SpinnerComp,
+
   },
   data() {
     return {

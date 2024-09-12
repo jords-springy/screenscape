@@ -40,7 +40,8 @@ export default createStore({
       state.userID = userID;
     },
     SET_USER(state, user) {
-      state.userData = user;
+      console.log('Setting user data in mutation:', user);
+      state.userData = user;  // Ensure this matches the state property used in the component
     },
     ADD_USER(state, user) {
       state.users.push(user);
@@ -154,26 +155,14 @@ export default createStore({
     },
     async fetchUser({ commit, state }, userID) {
       try {
-        const token = cookies.get('authToken') || state.token;
-        if (!token) {
-          throw new Error('Authentication token is missing.');
-        }
-        const id = userID || state.userID;
-        if (!id) {
-          throw new Error('UserID is missing.');
-        }
-        const response = await axios.get(`${apiURL}user/${id}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
+        console.log('Fetching user with ID:', userID);
+        const response = await axios.get(`${apiURL}user/${userID}`, {
+          headers: { 'Authorization': `Bearer ${state.token}` }
         });
+        console.log('Fetched user data:', response.data);
         commit('SET_USER', response.data);
-        return response.data;
       } catch (error) {
-        console.error('Failed to fetch user data:', {
-          message: error.message,
-          response: error.response?.data,
-          status: error.response?.status
-        });
-        toast.error('Failed to fetch user data.');
+        console.error('Error fetching user:', error);
         throw error;
       }
     },
@@ -225,16 +214,18 @@ export default createStore({
     },
     async deleteUser({ dispatch }, userID) {
       try {
+        if (!userID) throw new Error('No userID provided');
         await axios.delete(`${apiURL}user/${userID}`, {
           headers: { 'Authorization': `Bearer ${this.state.token}` }
         });
         toast.success('User deleted successfully');
-        dispatch('fetchUsers');
+        dispatch('fetchUsers'); // Optionally refetch users after deleting
       } catch (error) {
-        console.error('Error deleting user:', error);
+        console.error('Error deleting user:', error.response ? error.response.data : error.message);
         toast.error('Failed to delete user');
       }
     },
+    
     async fetchOrders({ commit, state }) {
       try {
         const token = cookies.get('authToken') || state.token;
@@ -272,6 +263,7 @@ export default createStore({
     userID: state => state.userID,
     token: state => state.token,
     userData: state => state.userData,
-    orders: state => state.orders
+    orders: state => state.orders,
+    user: state => state.userData  // Ensure this getter matches the state property
   }
 });

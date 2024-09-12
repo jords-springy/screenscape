@@ -10,6 +10,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
 
 const app = createApp(App);
 

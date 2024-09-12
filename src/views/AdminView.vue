@@ -192,168 +192,136 @@
             </table>
 
             <table class="table table-hover table-light">
-              <thead>
-                <tr>
-                  <th scope="col" colspan="3">Product</th>
-                  <th scope="col" colspan="3">Product Name</th>
-                  <th scope="col" >Product Description</th>
-                  <th scope="col" >Quantity</th>
-                  <th scope="col" >amount</th>
-                  <th scope="col" >Category</th>
-                  <th scope="col" colspan="2">Management</th>
-  
-                </tr>
-              </thead>
-              <tbody table>
-
-                <tr v-for="(prod, index) in products" :key="index">
-                    <td colspan="3"> <img :src="prod.prodUrl"  alt="${element.productName}" loading="lazy" style="width: 6rem;"> </td>
-                    <td colspan="3">{{ prod.prodName }} </td>
-                    <td>{{ prod.prodDescription }}</td>
-                    <td>{{ prod.quantity }}</td>
-                    <td>{{ prod.amount }}</td>
-                    <td>{{ prod.Category }}</td>
-                    <td>
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-secondary mb-3" @click="updateID(prod)" data-bs-toggle="modal" data-bs-target="#editProd" style="width: 5rem;">
-                        Edit
-                        </button>
-
-                        <!-- Modal -->
-                        <div class="modal fade" id="editProd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLongTitle">Update product</h5>
-                            </div>
-                            <div class="modal-body">
-                                <form class="form">
-                                    <div class="form-control-wrapper">
-                                        <span>
-                                            <input class="form-control" type="text" placeholder="Product names" v-model="prodPayload.prodName"
-                                            required />
-                                        </span>
-                                    </div>
-
-                                    <div class="form-control-wrapper">
-                                        <span>
-                                            <input class="form-control" type="text" placeholder="Product Desc" v-model="prodPayload.prodDescription"
-                                                required />
-                                        </span>
-                                    </div>
-                                    <div class="form-control-wrapper">
-                                        <span>
-                                            <input class="form-control" type="number" placeholder="Quantity" v-model="prodPayload.quantity" required />
-                                        </span>
-                                    </div>
-                                    <div class="form-control-wrapper">
-                                        <span>
-                                            <input class="form-control" type="number" placeholder="amount" v-model="prodPayload.amount"
-                                                required />
-                                        </span>
-                                    </div>
-
-                                    <div class="form-control-wrapper">
-                                        <span>
-                                            <input class="form-control" type="text" placeholder="Category" v-model="prodPayload.Category"
-                                                required />
-                                        </span>
-                                    </div>
-
-                                    <div class="form-control-wrapper">
-                                        <span>
-                                            <input class="form-control" type="text" placeholder="Product Url" v-model="prodPayload.prodUrl"
-                                                required />
-                                        </span>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer d-flex flex-column justify-content-around">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" @click="updateProd()" class="btn btn-primary" >Save changes</button>
-                            </div>
-                            </div>
-                        </div>
-                        </div>
-
-                        <br> 
-
-                        <button style="width: 5rem;" type="button" @click="prodDelete(prod.prodID)" class="btn btn-dark" :id="prod.prodID" deleteProduct >Delete</button>  
-                    </td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td>
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addProd">
-                    ADD PRODUCT
-                    </button>
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="addProd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add Product</h5>
-
-                        </div>
-                        <div class="modal-body">
-                            <form class="form" >
-                                    <div class="form-control-wrapper">
-                                        <span>
-                                            <input class="form-control" type="text" placeholder="Product name" v-model="prodUpdatePay.prodName"
-                                            required />
-                                        </span>
-                                    </div>
-
-                                    <div class="form-control-wrapper">
-                                        <span>
-                                            <input class="form-control" type="text" placeholder="Product Desc" v-model="prodUpdatePay.prodDescription"
-                                                required />
-                                        </span>
-                                    </div>
-                                    <div class="form-control-wrapper">
-                                        <span>
-                                            <input class="form-control" type="number" placeholder="Quantity" v-model="prodUpdatePay.quantity" required />
-                                        </span>
-                                    </div>
-                                    <div class="form-control-wrapper">
-                                        <span>
-                                            <input class="form-control" type="number" placeholder="amount" v-model="prodUpdatePay.amount"
-                                                required />
-                                        </span>
-                                    </div>
-
-                                    <div class="form-control-wrapper">
-                                        <span>
-                                            <input class="form-control" type="text" placeholder="Category" v-model="prodUpdatePay.Category"
-                                                required />
-                                        </span>
-                                    </div>
-
-                                    <div class="form-control-wrapper">
-                                        <span>
-                                            <input class="form-control" type="text" placeholder="Product Url" v-model="prodUpdatePay.prodUrl"
-                                                required />
-                                        </span>
-                                    </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer d-flex flex-column justify-content-around">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" @click="addProd" class="btn btn-primary">Save changes</button>
-                        </div>
-                        </div>
-                    </div>
-                    </div>
-                  </td>
-                  <td colspan="10" class="hidden-xs"></td>
-                
-                </tr>
-              </tfoot>
-            </table>
-        </div>
+      <thead class="table-primary">
+        <tr>
+          <th scope="col" colspan="3">Product</th>
+          <th scope="col" colspan="3">Product Name</th>
+          <th scope="col">Product Description</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Amount</th>
+          <th scope="col">Category</th>
+          <th scope="col" colspan="2">Management</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(prod, index) in products" :key="index">
+          <td colspan="3">
+            <img :src="prod.prodUrl" alt="Product Image" loading="lazy" class="img-fluid" style="max-width: 150px;">
+          </td>
+          <td colspan="3">{{ prod.prodName }}</td>
+          <td>{{ prod.prodDescription }}</td>
+          <td>{{ prod.quantity }}</td>
+          <td>{{ prod.amount }}</td>
+          <td>{{ prod.Category }}</td>
+          <td>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-secondary mb-3" @click="updateID(prod)" data-bs-toggle="modal" data-bs-target="#editProd">
+              Edit
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="editProd" tabindex="-1" aria-labelledby="editProdLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="editProdLabel">Update Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form>
+                      <div class="mb-3">
+                        <label for="prodName" class="form-label">Product Name</label>
+                        <input id="prodName" class="form-control" type="text" placeholder="Product name" v-model="prodPayload.prodName" required />
+                      </div>
+                      <div class="mb-3">
+                        <label for="prodDescription" class="form-label">Product Description</label>
+                        <input id="prodDescription" class="form-control" type="text" placeholder="Product Description" v-model="prodPayload.prodDescription" required />
+                      </div>
+                      <div class="mb-3">
+                        <label for="quantity" class="form-label">Quantity</label>
+                        <input id="quantity" class="form-control" type="number" placeholder="Quantity" v-model="prodPayload.quantity" required />
+                      </div>
+                      <div class="mb-3">
+                        <label for="amount" class="form-label">Amount</label>
+                        <input id="amount" class="form-control" type="number" placeholder="Amount" v-model="prodPayload.amount" required />
+                      </div>
+                      <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <input id="category" class="form-control" type="text" placeholder="Category" v-model="prodPayload.Category" required />
+                      </div>
+                      <div class="mb-3">
+                        <label for="prodUrl" class="form-label">Product URL</label>
+                        <input id="prodUrl" class="form-control" type="text" placeholder="Product URL" v-model="prodPayload.prodUrl" required />
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" @click="updateProd()" class="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button type="button" @click="prodDelete(prod.prodID)" class="btn btn-dark mt-2" :id="prod.prodID">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="11">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#insertProduct">
+              ADD PRODUCT
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="insertProduct" tabindex="-1" aria-labelledby="insertProductLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="insertProductLabel">Add Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form>
+                      <div class="mb-3">
+                        <label for="newProdName" class="form-label">Product Name</label>
+                        <input id="newProdName" class="form-control" type="text" placeholder="Product name" v-model="prodUpdatePay.prodName" required />
+                      </div>
+                      <div class="mb-3">
+                        <label for="newProdDescription" class="form-label">Product Description</label>
+                        <input id="newProdDescription" class="form-control" type="text" placeholder="Product Description" v-model="prodUpdatePay.prodDescription" required />
+                      </div>
+                      <div class="mb-3">
+                        <label for="newQuantity" class="form-label">Quantity</label>
+                        <input id="newQuantity" class="form-control" type="number" placeholder="Quantity" v-model="prodUpdatePay.quantity" required />
+                      </div>
+                      <div class="mb-3">
+                        <label for="newAmount" class="form-label">Amount</label>
+                        <input id="newAmount" class="form-control" type="number" placeholder="Amount" v-model="prodUpdatePay.amount" required />
+                      </div>
+                      <div class="mb-3">
+                        <label for="newCategory" class="form-label">Category</label>
+                        <input id="newCategory" class="form-control" type="text" placeholder="Category" v-model="prodUpdatePay.Category" required />
+                      </div>
+                      <div class="mb-3">
+                        <label for="newProdUrl" class="form-label">Product URL</label>
+                        <input id="newProdUrl" class="form-control" type="text" placeholder="Product URL" v-model="prodUpdatePay.prodUrl" required />
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" @click="insertProduct" class="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
     </div>
 
 </template>
@@ -410,8 +378,8 @@ let prodUpdatePay = ref({
 
 
 
-function addProd() {
-    store.dispatch('addAProduct', prodUpdatePay.value)
+function insertProduct() {
+    store.dispatch('insertProduct', prodUpdatePay.value)
 }
 
 function userDelete(id) {

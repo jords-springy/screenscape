@@ -99,7 +99,7 @@ const loginUser = async (req, res) => {
       process.env.SECRET_KEY,
       { expiresIn: '1h' }
     );
-
+    req.body.token = token
     res.cookie('jwt', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -107,13 +107,12 @@ const loginUser = async (req, res) => {
       maxAge: 60 * 60 * 1000 // 1 hour
     });
 
-    res.status(200).json({ message: 'Login successful' }); 
+    res.status(200).json({ message: 'Login successful',token:req.body.token}); 
   } catch (error) {
     console.error('Login Error:', error);
     res.status(500).json({ message: 'Error logging in', error: error.message });
   }
 };
-
 
 
 
@@ -135,15 +134,17 @@ const registerUser = async (req, res) => {
     await insertUserDb(firstName, lastName, userAge, gender, role, emailAdd, hashedPassword, userProfile);
 
     // Generate JWT token
-    const token = jwt.sign({ email: emailAdd, role }, process.env.SECRET_KEY, { expiresIn: '1h' });
+ 
 
     // Respond with success
-    res.status(201).json({ message: 'User registered successfully', token });
+    res.status(201).json({ message: 'User registered successfully'});
   } catch (error) {
     console.error('Error registering user:', error.message);
     res.status(500).json({ message: 'Error registering user', error: error.message });
   }
 };
+
+
 
 
 

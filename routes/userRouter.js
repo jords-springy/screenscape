@@ -1,6 +1,7 @@
 import express from 'express'
 import {getUsers, getUser, insertUser, deleteUser, updateUser,loginUser} from '../controller/userController.js'
 import { registerUser } from '../controller/userController.js'
+
 const router = express.Router()
 
 router.post('/register', registerUser);
@@ -15,4 +16,7 @@ router.
         .get(getUser)
         .delete(deleteUser)
         .patch(updateUser)
+
+
+
 export default router

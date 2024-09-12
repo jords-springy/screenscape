@@ -11,12 +11,14 @@ const authMiddleware = (req, res, next) => {
 
   // Check if the token exists in the cookie
   if (!token) {
-    return res.status(401).json({ message: 'Unauthorized: No token provided' });
+    return res.status(403).json({ message: 'Token is required' });
   }
 
   try {
     // Verify the token
+    req.body.token = token
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    console.log('Decoded Token:',decoded);
 
     // Store the user data (decoded token payload) in the request object
     req.user = decoded;
@@ -25,8 +27,8 @@ const authMiddleware = (req, res, next) => {
     next();
   } catch (error) {
     // If verification fails, send an unauthorized response
-    return res.status(401).json({
-      message: 'Unauthorized: Invalid token',
+    return res.status(403).json({
+      message: 'Invalid token',
       error: error.message
     });
   }
@@ -71,7 +73,8 @@ const verifyAToken = (roles = []) => {
 const generateToken = (user) => {
   const payload = {
       emailAdd: user.email,
-      userRole: user.userRole // Add userRole to the payload
+      userRole: user.userRole,
+      userID: user.userID // Add userRole to the payload
   };
 
   const token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: '1h' });

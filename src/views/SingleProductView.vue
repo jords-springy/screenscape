@@ -1,7 +1,7 @@
 <template>
   <div class="product">
     <SingleCard v-if="product" :product="product" :showDetails="showDetails"
-    @toggle-details="toggleProductDetails" @add-to-orders="handleAddToOrders">
+      @toggle-details="toggleProductDetails" @add-to-orders="handleAddToOrders">
       <template #image>
         <img :src="product.prodUrl || 'https://example.com/default-image.jpg'" alt="Product Image" class="singleprod"/>
       </template>
@@ -22,7 +22,7 @@
 
       <template #button>
         <button @click="toggleProducts">
-          {{ product.showDetails ? 'Return to Products': 'Go back' }}
+          {{ product.showDetails ? 'Return to Products' : 'Go Back' }}
         </button>
         <button @click="addToOrders">Add to Orders</button>
       </template>
@@ -41,53 +41,50 @@ export default {
     SingleCard,
   },
   computed: {
-    ...mapGetters(['product'])
+    ...mapGetters(['product', 'userID']) // Ensure you have userID in Vuex
   },
   methods: {
-  toggleProducts() {
-    this.$router.push({ name: 'products' });
-  },
-  handleAddToOrders(product) {
-      // Handle the logic to add the product to orders
-      axios.post(`https://screenscape.onrender.com/user/${userID}/order`, {
-        prodID: product.id, // Or however your API expects it
-        quantity: 1, // You can add quantity management later
-      })
-      .then(response => {
-        console.log("Product added to orders:", response.data);
-      })
-      .catch(error => {
-        console.error("Error adding to orders:", error);
-      });
+    toggleProducts() {
+      this.$router.push({ name: 'products' });
     },
-},
+    async handleAddToOrders() {
+      try {
+        const response = await axios.post(`https://screenscape.onrender.com/user/${this.userID}/order`, {
+          prodID: this.product.id, // Make sure to use the correct product ID
+          quantity: 1, // You can add quantity management later
+        });
+        console.log("Product added to orders:", response.data);
+        this.$toast.success("Product added to orders!");
+      } catch (error) {
+        console.error("Error adding to orders:", error);
+        this.$toast.error("Failed to add product to orders.");
+      }
+    },
+  },
   mounted() {
-  const prodID = this.$route.params.prodID;
-  console.log('Mounted with product ID:', prodID); // Check if this is correct
+    const prodID = this.$route.params.prodID;
+    console.log('Mounted with product ID:', prodID); // Check if this is correct
 
-  if (prodID) {
-    this.$store.dispatch('fetchProduct', prodID)
-      .catch(err => console.error('Dispatch failed:', err));
-  } else {
-    console.error('No valid product ID');
-  }
-}
-
+    if (prodID) {
+      this.$store.dispatch('fetchProduct', prodID)
+        .catch(err => console.error('Dispatch failed:', err));
+    } else {
+      console.error('No valid product ID');
+    }
+  },
 };
 </script>
 
 <style scoped>
-/* Custom styles if needed */
-.singleprod{
+.singleprod {
   height: 300px;
-  width:600px
+  width: 600px;
 }
-/* Responsive Styles */
+
 @media (max-width: 768px) {
-  /* Adjust single product image and card layout for tablets */
   .singleprod {
     height: auto;
-    max-width: 100%; /* Ensure the image fits within the container */
+    max-width: 100%;
   }
 
   .single-card {
@@ -96,21 +93,20 @@ export default {
   }
 
   h3 {
-    font-size: 1.25rem; /* Slightly smaller title for tablets */
+    font-size: 1.25rem;
   }
 
   p {
-    font-size: 0.9rem; /* Adjust font size for better readability */
+    font-size: 0.9rem;
   }
 
   button {
     padding: 8px;
-    font-size: 0.9rem; /* Adjust button text size */
+    font-size: 0.9rem;
   }
 }
 
 @media (max-width: 480px) {
-  /* Adjust single product image and card layout for mobile devices */
   .singleprod {
     height: auto;
     max-width: 100%;
@@ -122,19 +118,19 @@ export default {
   }
 
   h3 {
-    font-size: 1rem; /* Smaller title font size for mobile */
+    font-size: 1rem;
   }
 
   p {
-    font-size: 0.8rem; /* Smaller description font size */
+    font-size: 0.8rem;
   }
 
   button {
     padding: 6px;
-    font-size: 0.8rem; /* Smaller button text size */
+    font-size: 0.8rem;
     display: block;
-    width: 100%; /* Make buttons full-width on mobile */
-    margin-top: 10px; /* Add margin between buttons */
+    width: 100%;
+    margin-top: 10px;
   }
 }
 </style>

@@ -19,6 +19,7 @@ export default createStore({
     userData: null,
     orders: [],
     userRole: '',
+    orderMessage: '',
   },
   mutations: {
     SET_PRODUCTS(state, products) {
@@ -69,6 +70,9 @@ export default createStore({
     },
     setUserRole(state, role) {
       state.userRole = role;
+    },
+    setOrderSuccess(state, message) {
+      state.orderMessage = message; // Store the success message if needed
     },
   },
   actions: {
@@ -246,6 +250,30 @@ export default createStore({
         toast.error('Failed to fetch orders');
       }
     },
+    async insertOrder({ commit }, { userID, prodID }) {
+      try {
+        const response = await fetch(`https://yourapiurl.com/user/${userID}/order`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${store.state.token}`, // Include auth token if required
+          },
+          body: JSON.stringify({ prodID })
+        });
+  
+        const data = await response.json();
+        if (response.ok) {
+          commit('setOrderSuccess', data.message); // Commit success message or data
+          alert('Order was inserted successfully!');
+        } else {
+          alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        console.error('Error inserting order:', error.message);
+        alert(`Error: ${error.message}`);
+      }
+    },
+
     async logoutUser({ commit }) {
       try {
         await axios.post(`${apiURL}user/logout`, {}, {

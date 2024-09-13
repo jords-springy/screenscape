@@ -83,6 +83,7 @@ export default {
 </script>
 
 <style scoped>
+
 a{
   text-decoration-color: #950101;
   color:#950101;
@@ -93,6 +94,7 @@ a{
   align-items: center;
   height: 100vh;
   background-color: #f0f0f0;
+  margin-top: 10rem;
 }
 
 .signup-form {

@@ -1,4 +1,4 @@
-<template>
+a<template>
   <div class="home">
     <div class="parallax">
       <div class="parallax-blur"></div>
@@ -11,7 +11,7 @@
       <div class="featured-items">
         <h2>Featured Items</h2>
         <p>Explore our top cinema and mini-theater selections.</p>
-        <button class="view-more">View All</button>
+        <a href="/products"><button class="view-more">View All</button></a>
         
         <div class="cards-container">
           <div class="card">
@@ -19,7 +19,6 @@
             <div class="card-content">
               <p>Luxury Cinema Room</p>
               <p>Capacity: 10 guests</p>
-              <button class="view-more">View More</button>
             </div>
           </div>
           <div class="card">
@@ -27,7 +26,6 @@
             <div class="card-content">
               <p>Premium Mini-Theater</p>
               <p>Capacity: 6 guests</p>
-              <button class="view-more">View More</button>
             </div>
           </div>
           <div class="card">
@@ -35,7 +33,6 @@
             <div class="card-content">
               <p>Exclusive Cinema Experience</p>
               <p>Capacity: 15 guests</p>
-              <button class="view-more">View More</button>
             </div>
           </div>
         </div>
@@ -45,9 +42,9 @@
         <div class="signup-content">
           <h2>Join ScreenScape Today!</h2>
           <p>Sign up now to reserve your luxury private cinema experience.</p>
-          <router-link to="/signup">
+          <a href="/signup">
             <button class="signup-button">Sign Up</button>
-          </router-link>
+          </a>
         </div>
       </div>
    
@@ -74,13 +71,13 @@
 
       <div class="social-media">
   <h2>Follow Us</h2>
-  <a href="https://facebook.com/mi-casa" target="_blank" class="social-icon">
+  <a href="https://facebook.com/screenscape" target="_blank" class="social-icon">
     <i class="fab fa-facebook-f"></i>
   </a>
-  <a href="https://instagram.com/mi-casa" target="_blank" class="social-icon">
+  <a href="https://instagram.com/screenscape" target="_blank" class="social-icon">
     <i class="fab fa-instagram"></i>
   </a>
-  <a href="https://twitter.com/mi-casa" target="_blank" class="social-icon">
+  <a href="https://twitter.com/screenscape" target="_blank" class="social-icon">
     <i class="fab fa-twitter"></i>
   </a>
 </div>
@@ -233,5 +230,71 @@ export default {
 
 .signup-button:hover {
   background-color: #950101;
+}
+
+/* Media Queries */
+
+/* For small devices like mobile (300px - 599px) */
+@media (max-width: 599px) {
+  .parallax {
+    height: 80vh;
+  }
+  .hero-content h1 {
+    font-size: 1.8rem;
+  }
+  .hero-content p {
+    font-size: 1rem;
+    padding: 0 15px;
+  }
+  .cards-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .card {
+    width: 90%;
+    margin-bottom: 20px;
+  }
+}
+
+/* For tablets (600px - 899px) */
+@media (min-width: 600px) and (max-width: 899px) {
+  .parallax {
+    height: 90vh;
+  }
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+  .hero-content p {
+    font-size: 1.2rem;
+  }
+  .cards-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+  .card {
+    width: 45%;
+  }
+}
+
+/* For laptops/desktops (900px - 1440px) */
+@media (min-width: 900px) and (max-width: 1440px) {
+  .parallax {
+    height: 100vh;
+  }
+  .hero-content h1 {
+    font-size: 3rem;
+  }
+  .hero-content p {
+    font-size: 1.4rem;
+  }
+  .cards-container {
+    justify-content: space-around;
+    gap: 20px;
+  }
+  .card {
+    width: 300px;
+  }
 }
 </style>

@@ -200,4 +200,79 @@ h2 {
     margin-bottom: 15px;
   }
   
+  /* Media Queries for responsiveness */
+@media (max-width: 1200px) {
+  .what-we-offer {
+    padding: 40px 10px;
+  }
+  
+  .values-section {
+    padding: 40px 50px;
+  }
+}
+
+@media (max-width: 992px) {
+  .offer-list li {
+    font-size: 1em;
+  }
+
+  .values-section h2 {
+    font-size: 32px;
+  }
+
+  .value-item {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .parallax {
+    height: 60vh;
+  }
+  
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .values-section {
+    padding: 30px 20px;
+  }
+
+  .value-item {
+    margin-bottom: 20px;
+  }
+
+  .value-item h3 {
+    font-size: 20px;
+  }
+
+  #about {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .parallax-blur2 {
+    filter: blur(5px); /* Reduce blur on smaller screens */
+  }
+
+  .hero-content h1 {
+    font-size: 1.5rem;
+  }
+
+  .offer-list li {
+    font-size: 0.9em;
+    margin-bottom: 10px;
+  }
+
+  .values-section {
+    padding: 20px 10px;
+  }
+
+  .value-item h3 {
+    font-size: 18px;
+  }
+}
+
 </style>

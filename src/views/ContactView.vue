@@ -181,5 +181,60 @@
   color: #fff;
 }
 
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2rem; /* Adjust font size for tablets */
+  }
+
+  .hero-content p {
+    font-size: 1rem; /* Adjust font size for tablets */
+  }
+
+  .contact-container {
+    padding: 15px;
+  }
+
+  .contact-info, .contact-form {
+    padding: 15px;
+  }
+
+  input, textarea {
+    font-size: 0.9rem; /* Smaller font size for input fields */
+  }
+
+  button {
+    padding: 8px;
+    font-size: 0.9rem; /* Smaller font size for buttons */
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 1.5rem; /* Smaller font size for mobile */
+  }
+
+  .hero-content p {
+    font-size: 0.9rem; /* Smaller font size for mobile */
+  }
+
+  .contact-container {
+    padding: 10px;
+  }
+
+  .contact-info, .contact-form {
+    padding: 10px;
+  }
+
+  input, textarea {
+    font-size: 0.8rem; /* Smaller font size for input fields */
+  }
+
+  button {
+    padding: 6px;
+    font-size: 0.8rem; /* Smaller font size for buttons */
+  }
+}
+
   </style>
   

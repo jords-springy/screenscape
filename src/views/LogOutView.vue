@@ -112,5 +112,44 @@
   .delete-account-button:hover {
     background-color: #c82333;
   }
+
+  /* Responsive Styles */
+@media (max-width: 768px) {
+  .form-wrapper {
+    padding: 15px; /* Adjust padding for tablets */
+  }
+
+  .form-title {
+    font-size: 20px; /* Adjust font size for tablets */
+  }
+
+  .form-message {
+    font-size: 14px; /* Adjust font size for tablets */
+  }
+
+  .logout-button, .delete-account-button {
+    font-size: 14px; /* Adjust font size for buttons on tablets */
+    padding: 8px 16px; /* Adjust padding for buttons on tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  .form-wrapper {
+    padding: 10px; /* Reduce padding for mobile screens */
+  }
+
+  .form-title {
+    font-size: 18px; /* Reduce font size for mobile screens */
+  }
+
+  .form-message {
+    font-size: 12px; /* Reduce font size for mobile screens */
+  }
+
+  .logout-button, .delete-account-button {
+    font-size: 12px; /* Reduce font size for buttons on mobile screens */
+    padding: 6px 12px; /* Reduce padding for buttons on mobile screens */
+  }
+}
   </style>
   

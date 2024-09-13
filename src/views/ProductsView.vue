@@ -324,6 +324,71 @@
   color: #fff; /* Text color of options */
 }
 
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .content-container {
+    flex-direction: column;
+  }
 
+  .sidebar {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid #ddd;
+    margin-top: 20px;
+  }
+
+  .product-grid {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .parallax1 {
+    height: 50vh;
+  }
+
+  .hero-content1 h1 {
+    font-size: 2rem;
+  }
+
+  .hero-content1 p {
+    font-size: 1rem;
+  }
+
+  .search-container {
+    flex-direction: column;
+  }
+
+  .search-container input {
+    margin-bottom: 10px;
+  }
+
+  .custom-select {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content1 h1 {
+    font-size: 1.5rem;
+  }
+
+  .hero-content1 p {
+    font-size: 0.9rem;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
+  .search-container input {
+    width: 100%;
+  }
+
+  .search-container button {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
   </style>
   

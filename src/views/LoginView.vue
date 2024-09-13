@@ -102,5 +102,36 @@
   button:hover {
     background-color: #950101;
   }
+
+  /* Responsive Styles */
+@media (max-width: 768px) {
+  .login-form {
+    padding: 1.5rem; /* Adjust padding for tablets */
+  }
+
+  .form-group input {
+    padding: 0.5rem; /* Adjust padding for input fields on tablets */
+  }
+
+  button {
+    padding: 0.5rem; /* Adjust padding for buttons on tablets */
+    font-size: 0.9rem; /* Adjust font size for buttons on tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  .login-form {
+    padding: 1rem; /* Reduce padding for mobile screens */
+  }
+
+  .form-group input {
+    padding: 0.4rem; /* Reduce padding for input fields on mobile screens */
+  }
+
+  button {
+    padding: 0.4rem; /* Reduce padding for buttons on mobile screens */
+    font-size: 0.8rem; /* Reduce font size for buttons on mobile screens */
+  }
+}
   </style>
   

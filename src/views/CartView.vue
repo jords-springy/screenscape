@@ -66,4 +66,32 @@
     }
   };
   </script>
+  <style scoped>
+@media (max-width: 600px) {
+  .order-item {
+    padding: 10px;
+  }
+
+  button {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 400px) {
+  .order-item {
+    margin-bottom: 5px;
+  }
+
+  h1 {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+
+  button {
+    width: 100%;
+    padding: 10px;
+  }
+}
+</style>
   

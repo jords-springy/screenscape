@@ -82,4 +82,59 @@ export default {
   height: 300px;
   width:600px
 }
+/* Responsive Styles */
+@media (max-width: 768px) {
+  /* Adjust single product image and card layout for tablets */
+  .singleprod {
+    height: auto;
+    max-width: 100%; /* Ensure the image fits within the container */
+  }
+
+  .single-card {
+    padding: 15px;
+    max-width: 100%;
+  }
+
+  h3 {
+    font-size: 1.25rem; /* Slightly smaller title for tablets */
+  }
+
+  p {
+    font-size: 0.9rem; /* Adjust font size for better readability */
+  }
+
+  button {
+    padding: 8px;
+    font-size: 0.9rem; /* Adjust button text size */
+  }
+}
+
+@media (max-width: 480px) {
+  /* Adjust single product image and card layout for mobile devices */
+  .singleprod {
+    height: auto;
+    max-width: 100%;
+  }
+
+  .single-card {
+    padding: 10px;
+    max-width: 100%;
+  }
+
+  h3 {
+    font-size: 1rem; /* Smaller title font size for mobile */
+  }
+
+  p {
+    font-size: 0.8rem; /* Smaller description font size */
+  }
+
+  button {
+    padding: 6px;
+    font-size: 0.8rem; /* Smaller button text size */
+    display: block;
+    width: 100%; /* Make buttons full-width on mobile */
+    margin-top: 10px; /* Add margin between buttons */
+  }
+}
 </style>

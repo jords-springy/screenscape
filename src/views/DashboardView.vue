@@ -9,7 +9,6 @@
         <p><strong>Age:</strong> {{ user.userAge }}</p>
         <p><strong>Gender:</strong> {{ user.gender }}</p>
         <p><strong>Role:</strong> {{ user.userRole }}</p>
-        <p><strong>Password:</strong> {{ user.userPass }}</p>
         <button @click="fetchOrders" class="fetch-orders-button">Fetch Orders</button>
       </div>
       <div v-if="orders.length" class="orders">

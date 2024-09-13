@@ -137,4 +137,39 @@ button {
 button:hover {
   background-color: #950101;
 }
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .signup-form h2 {
+    font-size: 1.25rem; /* Adjust font size for tablets */
+  }
+
+  .signup-form input,
+  .signup-form select {
+    padding: 0.5rem; /* Adjust padding for smaller screens */
+    font-size: 0.9rem; /* Smaller font size for input fields */
+  }
+
+  button {
+    padding: 0.5rem; /* Adjust padding for smaller screens */
+    font-size: 0.9rem; /* Smaller font size for buttons */
+  }
+}
+
+@media (max-width: 480px) {
+  .signup-form h2 {
+    font-size: 1.1rem; /* Smaller font size for mobile */
+  }
+
+  .signup-form input,
+  .signup-form select {
+    padding: 0.4rem; /* Adjust padding for mobile screens */
+    font-size: 0.8rem; /* Smaller font size for input fields */
+  }
+
+  button {
+    padding: 0.4rem; /* Adjust padding for mobile screens */
+    font-size: 0.8rem; /* Smaller font size for buttons */
+  }
+}
 </style>

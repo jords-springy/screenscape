@@ -65,6 +65,7 @@ export default {
   font-family: Arial, sans-serif;
   padding: 20px;
   text-align: center;
+  margin-top: 6rem;
 }
 
 .user-info {

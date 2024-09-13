@@ -94,7 +94,7 @@ a{
   align-items: center;
   height: 100vh;
   background-color: #f0f0f0;
-  margin-top: 10rem;
+  margin-top: 8rem;
 }
 
 .signup-form {

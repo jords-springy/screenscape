@@ -5,7 +5,7 @@ import { getOrders, getOrder, insertOrder, updateOrderDetails, deleteAllUserOrde
 
 const router = express.Router();
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 router.get('/:userID/order', getOrders);
 

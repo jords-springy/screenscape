@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import store from '@/store';
 
 
 
@@ -30,8 +31,8 @@ const routes = [
     name: 'admin',
     component: () => import('../views/AdminView.vue'),
     beforeEnter: (to, from, next) => {
-      const userRole = store.state.userRole; // Assuming userRole is stored in Vuex
-      if (userRole === 'admin') {
+      const userID = store.state.userID; // Assuming userRole is stored in Vuex
+      if (userID === 60) {
         next(); // Allow access
       } else {
         next('/'); // Redirect to home or any other page

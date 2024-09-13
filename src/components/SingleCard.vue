@@ -54,7 +54,7 @@ export default {
     toggleProductDetails() {
       this.showDetails = !this.showDetails;
     },
-    addToOrders() {
+    AddToOrders() {
       this.$emit('add-to-orders', this.product)
     }
   }

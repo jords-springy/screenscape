@@ -29,7 +29,14 @@ const routes = [
     path: '/admin',
     name: 'admin',
     component: () => import('../views/AdminView.vue'),
-    
+    beforeEnter: (to, from, next) => {
+      const userRole = store.state.userRole; // Assuming userRole is stored in Vuex
+      if (userRole === 'admin') {
+        next(); // Allow access
+      } else {
+        next('/'); // Redirect to home or any other page
+      }
+    }
   },
   {
     path: '/contact',

@@ -18,6 +18,7 @@ export default createStore({
     userID: null,
     userData: null,
     orders: [],
+    userRole: '',
   },
   mutations: {
     SET_PRODUCTS(state, products) {
@@ -65,7 +66,10 @@ export default createStore({
     },
     SET_ORDERS(state, orders) {
       state.orders = orders;
-    }
+    },
+    setUserRole(state, role) {
+      state.userRole = role;
+    },
   },
   actions: {
     async fetchProducts({ commit }) {
@@ -191,7 +195,8 @@ export default createStore({
         const { token, userID } = response.data;
         if (token) {
           commit('SET_TOKEN', token);
-          commit('SET_USER_ID', userID); // Set userID in state
+          commit('SET_USER_ID', userID);
+          commit('setUserRole', response.data.role);  // Set userID in state
           cookies.set('authToken', token, '1d');
           // Optionally, you can call fetchUser here, but ensure it is updated to handle missing userID gracefully
         }

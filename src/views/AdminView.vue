@@ -1,4 +1,5 @@
 <template>
+  <div v-if="isAdmin">
     <div class="container-fluid">
         <h2>Welcome To Our Admin</h2>
         <div class="row" adminWrap >
@@ -321,6 +322,9 @@
         </tr>
       </tfoot>
     </table>
+    </div>
+    
+    
   </div>
     </div>
 
@@ -372,7 +376,7 @@ let prodUpdatePay = ref({
     prodUrl: ""
 })
 
-
+const isAdmin = computed(() => store.state.userRole === 'admin');
 
 // const prodPayload = null;
 

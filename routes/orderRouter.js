@@ -11,7 +11,7 @@ router.get('/:userID/order', getOrders);
 
 router.get('/:userID/order/:orderID', getOrder);
 
-router.post('/:userID/order', adminMiddleware, insertOrder);
+router.post('/:userID/order',insertOrder);
 
 router.patch('/:userID/order/:orderID', adminMiddleware, updateOrderDetails);
 

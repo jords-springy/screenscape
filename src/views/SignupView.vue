@@ -14,7 +14,7 @@
       </select>
       <select v-model="form.userRole" required>
         <option value="user">User</option>
-        <option value="admin">Admin</option>
+        
       </select>
       <input v-model="form.emailAdd" type="email" placeholder="Email" required />
       <input v-model="form.userPass" type="password" placeholder="Password" required />

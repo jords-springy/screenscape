@@ -60,5 +60,5 @@ export default {
 
 <style>
 @import url('./assets/css/style.css');
-@import url('http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900italic,900');
+@import url('https://fonts.googleapis.com/css?family=Roboto');
 </style>

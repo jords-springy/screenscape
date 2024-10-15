@@ -2,12 +2,8 @@ import { getAllOrders, getOrderById, createOrder, updateOrder, deleteAllOrders, 
 
 const getOrders = async (req, res) => {
   try {
-    if (req.user.userRole === 'admin') {
-      const orders = await getAllOrders(req.params.userID);
-      res.status(200).json(orders); 
-    } else {
-      res.status(403).json({ message: 'Forbidden: You do not have permission to view these orders' }); 
-    }
+    const orders = await getAllOrders(req.params.userID);
+    res.status(200).json(orders); 
   } catch (error) {
     console.error('Error fetching orders:', error.message);
     res.status(500).json({ message: 'Internal Server Error', error: error.message }); 
@@ -16,15 +12,11 @@ const getOrders = async (req, res) => {
 
 const getOrder = async (req, res) => {
   try {
-    if (req.user.userRole === 'admin') {
-      const order = await getOrderById(req.params.userID, req.params.orderID);
-      if (order) {
-        res.status(200).json(order); 
-      } else {
-        res.status(404).json({ message: 'Order not found' }); 
-      }
+    const order = await getOrderById(req.params.userID, req.params.orderID);
+    if (order) {
+      res.status(200).json(order); 
     } else {
-      res.status(403).json({ message: 'Forbidden: You do not have permission to view this order' }); 
+      res.status(404).json({ message: 'Order not found' }); 
     }
   } catch (error) {
     console.error('Error fetching order:', error.message);
@@ -35,7 +27,7 @@ const getOrder = async (req, res) => {
 const insertOrder = async (req, res) => {
   try {
     const { prodID } = req.body;
-    if (req.user.userRole !== 'admin' && req.user.userID !== req.params.userID) {
+    if (req.user.userID !== req.params.userID) {
       return res.status(403).json({ message: 'Forbidden: You do not have permission to place an order for this user' }); 
     }
     await createOrder(req.params.userID, prodID);
@@ -47,23 +39,20 @@ const insertOrder = async (req, res) => {
 }
 
 const updateOrderDetails = async (req, res) => {
-    try {
-      if (req.user.userRole !== 'admin') {
-        return res.status(403).json({ message: 'Forbidden: Only admins can update orders' });
-      }
-      const existingOrder = await getOrderById(req.params.userID, req.params.orderID);
-      if (!existingOrder) {
-        return res.status(404).json({ message: 'Order not found' });
-      }
-      const { prodID } = req.body;
-      const updatedProdID = prodID || existingOrder.prodID;
-      await updateOrder(req.params.userID, req.params.orderID, updatedProdID);
-      res.status(200).json({ message: 'Order update was successful' });
-    } catch (error) {
-      console.error('Error updating order:', error.message);
-      res.status(500).json({ message: 'Internal Server Error', error: error.message });
+  try {
+    const existingOrder = await getOrderById(req.params.userID, req.params.orderID);
+    if (!existingOrder) {
+      return res.status(404).json({ message: 'Order not found' });
     }
-  };
+    const { prodID } = req.body;
+    const updatedProdID = prodID || existingOrder.prodID;
+    await updateOrder(req.params.userID, req.params.orderID, updatedProdID);
+    res.status(200).json({ message: 'Order update was successful' });
+  } catch (error) {
+    console.error('Error updating order:', error.message);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+  }
+};
 
 const deleteAllUserOrders = async (req, res) => {
   try {
@@ -85,4 +74,4 @@ const deleteOrder = async (req, res) => {
   }
 }
 
-export { getOrders, getOrder, insertOrder, updateOrderDetails, deleteAllUserOrders, deleteOrder }
+export { getOrders, getOrder, insertOrder, updateOrderDetails, deleteAllUserOrders, deleteOrder };

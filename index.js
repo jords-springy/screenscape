@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // CORS Configuration: Allow specific origins
-const allowedOrigins = ['http://localhost:8080', 'https://screenscape-e5d1b.web.app'];
+const allowedOrigins = ['http://localhost:8080', 'https://screenscape-e5d1b.web.app', 'https://screenscapevercel.vercel.app'];
 app.use(cors({
     origin: function (origin, callback) {
         // Allow requests with no origin (like mobile apps or curl requests)
